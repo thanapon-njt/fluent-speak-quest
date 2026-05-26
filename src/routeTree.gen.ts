@@ -9,38 +9,243 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as AppReviewRouteImport } from './routes/_app.review'
+import { Route as AppProfileRouteImport } from './routes/_app.profile'
+import { Route as AppMapRouteImport } from './routes/_app.map'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppConversationsRouteImport } from './routes/_app.conversations'
+import { Route as AppVocabularyChapterIdRouteImport } from './routes/_app.vocabulary.$chapterId'
+import { Route as AppQuizChapterIdRouteImport } from './routes/_app.quiz.$chapterId'
+import { Route as AppGrammarChapterIdRouteImport } from './routes/_app.grammar.$chapterId'
+import { Route as AppConversationsScenarioIdRouteImport } from './routes/_app.conversations.$scenarioId'
+import { Route as AppChaptersChapterIdRouteImport } from './routes/_app.chapters.$chapterId'
+import { Route as AppConversationsScenarioIdResultRouteImport } from './routes/_app.conversations.$scenarioId.result'
 
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReviewRoute = AppReviewRouteImport.update({
+  id: '/review',
+  path: '/review',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMapRoute = AppMapRouteImport.update({
+  id: '/map',
+  path: '/map',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConversationsRoute = AppConversationsRouteImport.update({
+  id: '/conversations',
+  path: '/conversations',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppVocabularyChapterIdRoute = AppVocabularyChapterIdRouteImport.update({
+  id: '/vocabulary/$chapterId',
+  path: '/vocabulary/$chapterId',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppQuizChapterIdRoute = AppQuizChapterIdRouteImport.update({
+  id: '/quiz/$chapterId',
+  path: '/quiz/$chapterId',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGrammarChapterIdRoute = AppGrammarChapterIdRouteImport.update({
+  id: '/grammar/$chapterId',
+  path: '/grammar/$chapterId',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConversationsScenarioIdRoute =
+  AppConversationsScenarioIdRouteImport.update({
+    id: '/$scenarioId',
+    path: '/$scenarioId',
+    getParentRoute: () => AppConversationsRoute,
+  } as any)
+const AppChaptersChapterIdRoute = AppChaptersChapterIdRouteImport.update({
+  id: '/chapters/$chapterId',
+  path: '/chapters/$chapterId',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConversationsScenarioIdResultRoute =
+  AppConversationsScenarioIdResultRouteImport.update({
+    id: '/result',
+    path: '/result',
+    getParentRoute: () => AppConversationsScenarioIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/conversations': typeof AppConversationsRouteWithChildren
+  '/dashboard': typeof AppDashboardRoute
+  '/map': typeof AppMapRoute
+  '/profile': typeof AppProfileRoute
+  '/review': typeof AppReviewRoute
+  '/settings': typeof AppSettingsRoute
+  '/chapters/$chapterId': typeof AppChaptersChapterIdRoute
+  '/conversations/$scenarioId': typeof AppConversationsScenarioIdRouteWithChildren
+  '/grammar/$chapterId': typeof AppGrammarChapterIdRoute
+  '/quiz/$chapterId': typeof AppQuizChapterIdRoute
+  '/vocabulary/$chapterId': typeof AppVocabularyChapterIdRoute
+  '/conversations/$scenarioId/result': typeof AppConversationsScenarioIdResultRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/conversations': typeof AppConversationsRouteWithChildren
+  '/dashboard': typeof AppDashboardRoute
+  '/map': typeof AppMapRoute
+  '/profile': typeof AppProfileRoute
+  '/review': typeof AppReviewRoute
+  '/settings': typeof AppSettingsRoute
+  '/chapters/$chapterId': typeof AppChaptersChapterIdRoute
+  '/conversations/$scenarioId': typeof AppConversationsScenarioIdRouteWithChildren
+  '/grammar/$chapterId': typeof AppGrammarChapterIdRoute
+  '/quiz/$chapterId': typeof AppQuizChapterIdRoute
+  '/vocabulary/$chapterId': typeof AppVocabularyChapterIdRoute
+  '/conversations/$scenarioId/result': typeof AppConversationsScenarioIdResultRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/_app/conversations': typeof AppConversationsRouteWithChildren
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/map': typeof AppMapRoute
+  '/_app/profile': typeof AppProfileRoute
+  '/_app/review': typeof AppReviewRoute
+  '/_app/settings': typeof AppSettingsRoute
+  '/_app/chapters/$chapterId': typeof AppChaptersChapterIdRoute
+  '/_app/conversations/$scenarioId': typeof AppConversationsScenarioIdRouteWithChildren
+  '/_app/grammar/$chapterId': typeof AppGrammarChapterIdRoute
+  '/_app/quiz/$chapterId': typeof AppQuizChapterIdRoute
+  '/_app/vocabulary/$chapterId': typeof AppVocabularyChapterIdRoute
+  '/_app/conversations/$scenarioId/result': typeof AppConversationsScenarioIdResultRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/conversations'
+    | '/dashboard'
+    | '/map'
+    | '/profile'
+    | '/review'
+    | '/settings'
+    | '/chapters/$chapterId'
+    | '/conversations/$scenarioId'
+    | '/grammar/$chapterId'
+    | '/quiz/$chapterId'
+    | '/vocabulary/$chapterId'
+    | '/conversations/$scenarioId/result'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/conversations'
+    | '/dashboard'
+    | '/map'
+    | '/profile'
+    | '/review'
+    | '/settings'
+    | '/chapters/$chapterId'
+    | '/conversations/$scenarioId'
+    | '/grammar/$chapterId'
+    | '/quiz/$chapterId'
+    | '/vocabulary/$chapterId'
+    | '/conversations/$scenarioId/result'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/login'
+    | '/register'
+    | '/_app/conversations'
+    | '/_app/dashboard'
+    | '/_app/map'
+    | '/_app/profile'
+    | '/_app/review'
+    | '/_app/settings'
+    | '/_app/chapters/$chapterId'
+    | '/_app/conversations/$scenarioId'
+    | '/_app/grammar/$chapterId'
+    | '/_app/quiz/$chapterId'
+    | '/_app/vocabulary/$chapterId'
+    | '/_app/conversations/$scenarioId/result'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +253,153 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/review': {
+      id: '/_app/review'
+      path: '/review'
+      fullPath: '/review'
+      preLoaderRoute: typeof AppReviewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/profile': {
+      id: '/_app/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/map': {
+      id: '/_app/map'
+      path: '/map'
+      fullPath: '/map'
+      preLoaderRoute: typeof AppMapRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/conversations': {
+      id: '/_app/conversations'
+      path: '/conversations'
+      fullPath: '/conversations'
+      preLoaderRoute: typeof AppConversationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/vocabulary/$chapterId': {
+      id: '/_app/vocabulary/$chapterId'
+      path: '/vocabulary/$chapterId'
+      fullPath: '/vocabulary/$chapterId'
+      preLoaderRoute: typeof AppVocabularyChapterIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/quiz/$chapterId': {
+      id: '/_app/quiz/$chapterId'
+      path: '/quiz/$chapterId'
+      fullPath: '/quiz/$chapterId'
+      preLoaderRoute: typeof AppQuizChapterIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/grammar/$chapterId': {
+      id: '/_app/grammar/$chapterId'
+      path: '/grammar/$chapterId'
+      fullPath: '/grammar/$chapterId'
+      preLoaderRoute: typeof AppGrammarChapterIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/conversations/$scenarioId': {
+      id: '/_app/conversations/$scenarioId'
+      path: '/$scenarioId'
+      fullPath: '/conversations/$scenarioId'
+      preLoaderRoute: typeof AppConversationsScenarioIdRouteImport
+      parentRoute: typeof AppConversationsRoute
+    }
+    '/_app/chapters/$chapterId': {
+      id: '/_app/chapters/$chapterId'
+      path: '/chapters/$chapterId'
+      fullPath: '/chapters/$chapterId'
+      preLoaderRoute: typeof AppChaptersChapterIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/conversations/$scenarioId/result': {
+      id: '/_app/conversations/$scenarioId/result'
+      path: '/result'
+      fullPath: '/conversations/$scenarioId/result'
+      preLoaderRoute: typeof AppConversationsScenarioIdResultRouteImport
+      parentRoute: typeof AppConversationsScenarioIdRoute
+    }
   }
 }
 
+interface AppConversationsScenarioIdRouteChildren {
+  AppConversationsScenarioIdResultRoute: typeof AppConversationsScenarioIdResultRoute
+}
+
+const AppConversationsScenarioIdRouteChildren: AppConversationsScenarioIdRouteChildren =
+  {
+    AppConversationsScenarioIdResultRoute:
+      AppConversationsScenarioIdResultRoute,
+  }
+
+const AppConversationsScenarioIdRouteWithChildren =
+  AppConversationsScenarioIdRoute._addFileChildren(
+    AppConversationsScenarioIdRouteChildren,
+  )
+
+interface AppConversationsRouteChildren {
+  AppConversationsScenarioIdRoute: typeof AppConversationsScenarioIdRouteWithChildren
+}
+
+const AppConversationsRouteChildren: AppConversationsRouteChildren = {
+  AppConversationsScenarioIdRoute: AppConversationsScenarioIdRouteWithChildren,
+}
+
+const AppConversationsRouteWithChildren =
+  AppConversationsRoute._addFileChildren(AppConversationsRouteChildren)
+
+interface AppRouteChildren {
+  AppConversationsRoute: typeof AppConversationsRouteWithChildren
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppMapRoute: typeof AppMapRoute
+  AppProfileRoute: typeof AppProfileRoute
+  AppReviewRoute: typeof AppReviewRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppChaptersChapterIdRoute: typeof AppChaptersChapterIdRoute
+  AppGrammarChapterIdRoute: typeof AppGrammarChapterIdRoute
+  AppQuizChapterIdRoute: typeof AppQuizChapterIdRoute
+  AppVocabularyChapterIdRoute: typeof AppVocabularyChapterIdRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppConversationsRoute: AppConversationsRouteWithChildren,
+  AppDashboardRoute: AppDashboardRoute,
+  AppMapRoute: AppMapRoute,
+  AppProfileRoute: AppProfileRoute,
+  AppReviewRoute: AppReviewRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppChaptersChapterIdRoute: AppChaptersChapterIdRoute,
+  AppGrammarChapterIdRoute: AppGrammarChapterIdRoute,
+  AppQuizChapterIdRoute: AppQuizChapterIdRoute,
+  AppVocabularyChapterIdRoute: AppVocabularyChapterIdRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  LoginRoute: LoginRoute,
+  RegisterRoute: RegisterRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
