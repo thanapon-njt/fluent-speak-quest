@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { getChapter } from "@/data/mock";
+import { getChapter, type Chapter } from "@/data/mock";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, BookOpen, Mic, Sparkles, Clock, Trophy, Star } from "lucide-react";
 
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/_app/chapters/$chapterId")({
 });
 
 function ChapterDetail() {
-  const c = Route.useLoaderData();
+  const c = Route.useLoaderData() as Chapter;
   return (
     <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-10">
       <Link to="/map" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4">

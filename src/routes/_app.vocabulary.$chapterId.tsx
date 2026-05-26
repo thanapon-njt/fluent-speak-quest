@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
-import { getChapter } from "@/data/mock";
+import { getChapter, type Chapter } from "@/data/mock";
 import { Button } from "@/components/ui/button";
 import { Volume2, ChevronLeft, ChevronRight, X, Check } from "lucide-react";
 
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_app/vocabulary/$chapterId")({
 });
 
 function VocabularyPage() {
-  const c = Route.useLoaderData();
+  const c = Route.useLoaderData() as Chapter;
   const words = c.vocabulary.length > 0 ? c.vocabulary : [
     { word: "example", ipa: "/ɪɡˈzæmpəl/", meaning: "a sample", example: "Here is an example." },
   ];

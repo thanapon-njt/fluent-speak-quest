@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
-import { getChapter } from "@/data/mock";
+import { getChapter, type Chapter } from "@/data/mock";
 import { Button } from "@/components/ui/button";
 import { Check, X, Zap, Sparkles } from "lucide-react";
 
@@ -29,7 +29,7 @@ const questions: Q[] = [
 ];
 
 function QuizPage() {
-  const c = Route.useLoaderData();
+  const c = Route.useLoaderData() as Chapter;
   const [i, setI] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [score, setScore] = useState(0);

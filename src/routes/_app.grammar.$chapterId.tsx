@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { getChapter } from "@/data/mock";
+import { getChapter, type Chapter } from "@/data/mock";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Lightbulb } from "lucide-react";
 
@@ -16,7 +16,7 @@ export const Route = createFileRoute("/_app/grammar/$chapterId")({
 });
 
 function GrammarPage() {
-  const c = Route.useLoaderData();
+  const c = Route.useLoaderData() as Chapter;
   const topic = c.grammar[0] ?? "Polite requests";
 
   return (

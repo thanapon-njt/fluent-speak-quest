@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { getScenario } from "@/data/mock";
+import { getScenario, type Scenario } from "@/data/mock";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Languages, Lightbulb, RotateCcw, Volume2, X } from "lucide-react";
 import { MicButton, VoiceWaveform } from "@/components/mic-button";
@@ -26,7 +26,7 @@ const seed: Turn[] = [
 ];
 
 function Room() {
-  const s = Route.useLoaderData();
+  const s = Route.useLoaderData() as Scenario;
   const navigate = useNavigate();
   const [turns, setTurns] = useState<Turn[]>(seed);
   const [listening, setListening] = useState(false);

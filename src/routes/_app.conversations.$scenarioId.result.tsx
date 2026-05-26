@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { getScenario } from "@/data/mock";
+import { getScenario, type Scenario } from "@/data/mock";
 import { Button } from "@/components/ui/button";
 import { ScoreRing } from "@/components/score-ring";
 import { Sparkles, Zap, RotateCcw, ArrowRight, AlertCircle } from "lucide-react";
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_app/conversations/$scenarioId/result")({
 });
 
 function Result() {
-  const s = Route.useLoaderData();
+  const s = Route.useLoaderData() as Scenario;
   const scores = { pronunciation: 86, fluency: 78, grammar: 82, vocabulary: 74 };
   const xp = 120;
 
