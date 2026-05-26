@@ -36,7 +36,7 @@ function MapPage() {
                   <Link
                     to="/chapters/$chapterId"
                     params={{ chapterId: c.id }}
-                    disabled={locked}
+                    aria-disabled={locked}
                     className={`block group rounded-2xl border bg-card p-4 shadow-soft transition-all ${
                       locked
                         ? "opacity-60 pointer-events-none border-dashed"
