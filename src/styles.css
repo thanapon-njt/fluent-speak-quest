@@ -35,6 +35,8 @@
   --color-success-foreground: var(--success-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-flame: var(--flame);
+  --color-flame-foreground: var(--flame-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -80,6 +82,9 @@
   --destructive: oklch(0.62 0.22 27);
   --destructive-foreground: oklch(0.99 0 0);
 
+  --flame: oklch(0.72 0.2 45);
+  --flame-foreground: oklch(0.99 0 0);
+
   --border: oklch(0.92 0.01 150);
   --input: oklch(0.94 0.01 150);
   --ring: oklch(0.62 0.17 156);
@@ -88,11 +93,18 @@
   --gradient-hero: linear-gradient(135deg, oklch(0.55 0.17 156) 0%, oklch(0.7 0.16 175) 60%, oklch(0.78 0.14 195) 100%);
   --gradient-accent: linear-gradient(135deg, oklch(0.86 0.16 92), oklch(0.78 0.18 70));
   --gradient-dark: linear-gradient(135deg, oklch(0.27 0.03 240), oklch(0.18 0.03 240));
+  --gradient-flame: linear-gradient(135deg, oklch(0.78 0.2 55), oklch(0.66 0.24 30));
+  --gradient-immersive: radial-gradient(120% 80% at 50% -10%, oklch(0.62 0.17 156 / 0.35), transparent 60%),
+                         radial-gradient(80% 60% at 100% 100%, oklch(0.7 0.16 175 / 0.25), transparent 60%),
+                         linear-gradient(180deg, oklch(0.18 0.03 240), oklch(0.13 0.03 240));
+  --gradient-aurora: conic-gradient(from 180deg at 50% 50%, oklch(0.62 0.17 156), oklch(0.7 0.16 175), oklch(0.86 0.16 92), oklch(0.62 0.17 156));
 
   --shadow-soft: 0 4px 14px -4px oklch(0.62 0.17 156 / 0.12);
   --shadow-card: 0 8px 30px -12px oklch(0.22 0.03 240 / 0.12);
   --shadow-glow: 0 8px 40px -8px oklch(0.62 0.17 156 / 0.45);
   --shadow-accent: 0 8px 30px -8px oklch(0.86 0.16 92 / 0.5);
+  --shadow-flame: 0 8px 30px -8px oklch(0.72 0.2 45 / 0.6);
+  --shadow-orb: 0 0 80px -10px oklch(0.7 0.16 175 / 0.6), 0 0 200px -40px oklch(0.62 0.17 156 / 0.5);
 
   --sidebar: oklch(0.99 0.005 150);
   --sidebar-foreground: oklch(0.22 0.03 240);
@@ -125,6 +137,8 @@
   --success-foreground: oklch(0.16 0.02 240);
   --destructive: oklch(0.65 0.22 27);
   --destructive-foreground: oklch(0.99 0 0);
+  --flame: oklch(0.74 0.2 45);
+  --flame-foreground: oklch(0.99 0 0);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 12%);
   --ring: oklch(0.72 0.17 156);
@@ -139,9 +153,7 @@
 }
 
 @layer base {
-  * {
-    border-color: var(--color-border);
-  }
+  * { border-color: var(--color-border); }
   html, body {
     background-color: var(--color-background);
     color: var(--color-foreground);
@@ -159,16 +171,29 @@
   .bg-gradient-hero { background-image: var(--gradient-hero); }
   .bg-gradient-accent { background-image: var(--gradient-accent); }
   .bg-gradient-dark { background-image: var(--gradient-dark); }
+  .bg-gradient-flame { background-image: var(--gradient-flame); }
+  .bg-gradient-immersive { background-image: var(--gradient-immersive); }
+  .bg-gradient-aurora { background-image: var(--gradient-aurora); }
   .shadow-soft { box-shadow: var(--shadow-soft); }
   .shadow-card { box-shadow: var(--shadow-card); }
   .shadow-glow { box-shadow: var(--shadow-glow); }
   .shadow-accent-glow { box-shadow: var(--shadow-accent); }
+  .shadow-flame { box-shadow: var(--shadow-flame); }
+  .shadow-orb { box-shadow: var(--shadow-orb); }
   .font-display { font-family: var(--font-display); }
+  .text-flame { color: var(--color-flame); }
+  .grid-bg {
+    background-image:
+      linear-gradient(oklch(1 0 0 / 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(1 0 0 / 0.04) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
 }
 
+/* ===== Animations ===== */
 @keyframes mic-pulse {
   0%, 100% { box-shadow: 0 0 0 0 oklch(0.62 0.17 156 / 0.55); }
-  50% { box-shadow: 0 0 0 18px oklch(0.62 0.17 156 / 0); }
+  50% { box-shadow: 0 0 0 22px oklch(0.62 0.17 156 / 0); }
 }
 .animate-mic-pulse { animation: mic-pulse 1.6s ease-out infinite; }
 
@@ -195,6 +220,58 @@
   from { stroke-dashoffset: var(--ring-circumference, 283); }
 }
 .animate-ring-fill { animation: ring-fill 1.2s cubic-bezier(0.2, 0.9, 0.3, 1) both; }
+
+@keyframes flame-flicker {
+  0%, 100% { transform: scale(1) rotate(-1deg); filter: drop-shadow(0 0 8px oklch(0.72 0.2 45 / 0.6)); }
+  50% { transform: scale(1.08) rotate(1deg); filter: drop-shadow(0 0 14px oklch(0.78 0.22 55 / 0.85)); }
+}
+.animate-flame { animation: flame-flicker 2.2s ease-in-out infinite; transform-origin: 50% 90%; }
+
+@keyframes orb-pulse {
+  0%, 100% { transform: scale(1); box-shadow: var(--shadow-orb); }
+  50% { transform: scale(1.04); box-shadow: 0 0 120px -10px oklch(0.78 0.16 175 / 0.8), 0 0 260px -40px oklch(0.62 0.17 156 / 0.6); }
+}
+.animate-orb { animation: orb-pulse 3.5s ease-in-out infinite; }
+
+@keyframes orb-spin {
+  to { transform: rotate(360deg); }
+}
+.animate-orb-spin { animation: orb-spin 14s linear infinite; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.15), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2.4s linear infinite;
+}
+
+@keyframes glow-sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.animate-glow-sweep { animation: glow-sweep 2.8s ease-in-out infinite; }
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.02); }
+}
+.animate-bob { animation: bob 2.4s ease-in-out infinite; }
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up { animation: fade-in-up 0.5s ease-out both; }
+
+@keyframes streak-pop {
+  0% { transform: scale(0.4) rotate(-12deg); opacity: 0; }
+  60% { transform: scale(1.15) rotate(4deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+.animate-streak-pop { animation: streak-pop 0.7s cubic-bezier(0.2,0.9,0.3,1.4) both; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }

@@ -69,11 +69,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </Link>
         </nav>
 
-        <div className="mt-auto rounded-2xl bg-gradient-primary p-4 text-primary-foreground shadow-glow">
-          <div className="flex items-center gap-2 text-sm font-semibold">
-            <Flame className="h-4 w-4" /> {user.streak}-day streak
+        <div className="mt-auto rounded-2xl bg-gradient-flame p-4 text-flame-foreground shadow-flame relative overflow-hidden">
+          <div className="absolute -right-4 -top-4 text-5xl opacity-30 animate-flame">🔥</div>
+          <div className="relative flex items-center gap-2 text-sm font-bold">
+            <Flame className="h-4 w-4 animate-flame" /> {user.streak}-day streak
           </div>
-          <div className="text-xs opacity-90 mt-1">Keep the fire alive — speak 5 min today.</div>
+          <div className="relative text-xs opacity-95 mt-1">Keep the fire alive — speak 5 min today.</div>
         </div>
       </aside>
 
@@ -87,11 +88,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <span className="font-display font-bold">Fluent</span>
           </Link>
           <div className="flex items-center gap-2 text-sm">
-            <span className="flex items-center gap-1 px-2 py-1 rounded-full bg-accent/20 text-accent-foreground font-semibold">
+            <span className="flex items-center gap-1 px-2 py-1 rounded-full bg-accent/25 text-accent-foreground font-bold text-xs">
               <Zap className="h-3.5 w-3.5" /> {user.xp}
             </span>
-            <span className="flex items-center gap-1 px-2 py-1 rounded-full bg-orange-500/15 text-orange-600 font-semibold">
-              <Flame className="h-3.5 w-3.5" /> {user.streak}
+            <span className="flex items-center gap-1 px-2 py-1 rounded-full bg-gradient-flame text-flame-foreground font-bold text-xs shadow-flame">
+              <Flame className="h-3.5 w-3.5 animate-flame" /> {user.streak}
             </span>
           </div>
         </header>

@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-ro
 import { useState } from "react";
 import { getScenario, type Scenario } from "@/data/mock";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Languages, Lightbulb, RotateCcw, Volume2, X } from "lucide-react";
+import { ArrowLeft, Languages, Lightbulb, RotateCcw, Volume2, X, Target, Sparkles, Gauge } from "lucide-react";
 import { MicButton, VoiceWaveform } from "@/components/mic-button";
 
 export const Route = createFileRoute("/_app/conversations/$scenarioId")({
@@ -30,14 +30,15 @@ function Room() {
   const navigate = useNavigate();
   const [turns, setTurns] = useState<Turn[]>(seed);
   const [listening, setListening] = useState(false);
+  const [aiSpeaking, setAiSpeaking] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [translate, setTranslate] = useState(false);
+  const [showHints, setShowHints] = useState(false);
 
   const toggleMic = () => {
     if (!listening) {
       setListening(true);
       setTranscript("");
-      // simulate streaming transcript
       const sample = "Iced with vanilla, please.";
       let i = 0;
       const id = setInterval(() => {
@@ -50,119 +51,156 @@ function Room() {
       if (transcript) {
         setTurns((t) => [...t, { role: "user", text: transcript }]);
         setTranscript("");
+        setAiSpeaking(true);
         setTimeout(() => {
           setTurns((t) => [...t, { role: "ai", text: "Perfect choice — that'll be $5.40. Have a great day!" }]);
-        }, 800);
+          setAiSpeaking(false);
+        }, 1400);
       }
     }
   };
 
-  const progress = Math.min(100, (turns.filter((t) => t.role === "user").length / 5) * 100);
+  const totalTurns = 5;
+  const userTurns = turns.filter((t) => t.role === "user").length;
+  const progress = Math.min(100, (userTurns / totalTurns) * 100);
 
   return (
-    <div className="h-[calc(100vh-3.5rem)] md:h-screen flex flex-col bg-gradient-to-b from-background to-muted/30">
+    <div className="h-[calc(100vh-3.5rem)] md:h-screen flex flex-col bg-gradient-immersive text-white relative overflow-hidden">
+      {/* Decorative auras */}
+      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 h-[500px] w-[500px] rounded-full bg-primary/20 blur-3xl" />
+      <div className="pointer-events-none absolute inset-0 grid-bg opacity-30" />
+
       {/* Top bar */}
-      <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-border bg-background/80 backdrop-blur">
-        <Link to="/conversations" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <div className="relative flex items-center justify-between px-4 sm:px-6 py-3 border-b border-white/10 backdrop-blur-md bg-black/10">
+        <Link to="/conversations" className="inline-flex items-center gap-1 text-sm text-white/70 hover:text-white">
           <ArrowLeft className="h-4 w-4" /> Exit
         </Link>
-        <div className="flex items-center gap-2">
-          <div className="hidden sm:flex items-center gap-2">
+        <div className="hidden sm:flex items-center gap-2.5">
+          <div className="relative">
             <div className="text-2xl">{s.tutor.emoji}</div>
-            <div className="text-sm leading-tight">
-              <div className="font-semibold">{s.tutor.name}</div>
-              <div className="text-xs text-muted-foreground">{s.tutor.accent} · {s.title}</div>
-            </div>
+            <span className={`absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-background ${aiSpeaking ? "bg-accent animate-pulse" : "bg-success"}`} />
+          </div>
+          <div className="text-sm leading-tight">
+            <div className="font-semibold">{s.tutor.name}</div>
+            <div className="text-xs text-white/60">{s.tutor.accent} accent · {s.title}</div>
           </div>
         </div>
         <button
           onClick={() => setTranslate((t) => !t)}
-          className={`text-xs font-semibold inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full ${translate ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+          className={`text-xs font-semibold inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full transition ${translate ? "bg-accent text-accent-foreground" : "bg-white/10 text-white/80 hover:bg-white/20"}`}
         >
           <Languages className="h-3.5 w-3.5" /> TH
         </button>
       </div>
 
-      {/* Progress strip */}
-      <div className="h-1 bg-muted">
-        <div className="h-full bg-gradient-primary transition-all duration-500" style={{ width: `${progress}%` }} />
+      {/* Progress strip with step dots */}
+      <div className="relative px-4 sm:px-6 py-2 bg-black/10 backdrop-blur-md border-b border-white/5">
+        <div className="max-w-2xl mx-auto flex items-center gap-3">
+          <Gauge className="h-3.5 w-3.5 text-white/60" />
+          <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-accent to-primary-glow rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
+          </div>
+          <span className="text-[11px] font-medium text-white/70 tabular-nums">{userTurns}/{totalTurns}</span>
+        </div>
       </div>
 
-      <div className="flex-1 grid lg:grid-cols-[280px_1fr] min-h-0">
-        {/* Left sidebar */}
-        <aside className="hidden lg:flex flex-col gap-4 p-5 border-r border-border bg-card/40 overflow-y-auto">
-          <div className="rounded-2xl bg-card border border-border p-4 shadow-soft">
-            <div className="text-xs uppercase tracking-wider text-muted-foreground">Objective</div>
-            <p className="text-sm mt-2">{s.objective}</p>
+      <div className="relative flex-1 grid lg:grid-cols-[300px_1fr] min-h-0">
+        {/* Sidebar (desktop) */}
+        <aside className="hidden lg:flex flex-col gap-4 p-5 border-r border-white/10 overflow-y-auto bg-black/10">
+          <div className="rounded-2xl bg-white/5 border border-white/10 p-4 backdrop-blur">
+            <div className="text-[11px] uppercase tracking-wider text-white/60 flex items-center gap-1.5"><Target className="h-3 w-3" /> Mission objective</div>
+            <p className="text-sm mt-2 leading-relaxed">{s.objective}</p>
           </div>
-          <div className="rounded-2xl bg-card border border-border p-4 shadow-soft">
-            <div className="text-xs uppercase tracking-wider text-muted-foreground flex items-center gap-1">
-              <Lightbulb className="h-3 w-3" /> Useful phrases
-            </div>
-            <div className="mt-2 flex flex-wrap gap-2">
+          <div className="rounded-2xl bg-white/5 border border-white/10 p-4 backdrop-blur">
+            <div className="text-[11px] uppercase tracking-wider text-white/60 flex items-center gap-1.5"><Lightbulb className="h-3 w-3" /> Suggested phrases</div>
+            <div className="mt-2.5 flex flex-wrap gap-2">
               {s.hints.map((h) => (
-                <span key={h} className="text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium">
+                <span key={h} className="text-xs px-2.5 py-1.5 rounded-full bg-primary/20 text-primary-glow font-medium border border-primary/30">
                   {h}
                 </span>
               ))}
             </div>
           </div>
-          <div className="rounded-2xl bg-card border border-border p-4 shadow-soft">
-            <div className="text-xs uppercase tracking-wider text-muted-foreground">Progress</div>
-            <div className="mt-2 flex items-baseline gap-1">
-              <span className="font-display text-2xl font-bold">{turns.filter((t) => t.role === "user").length}</span>
-              <span className="text-sm text-muted-foreground">/ 5 turns</span>
-            </div>
-            <div className="mt-2 h-1.5 bg-muted rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-primary" style={{ width: `${progress}%` }} />
-            </div>
+          <div className="rounded-2xl bg-gradient-primary p-4 shadow-glow text-primary-foreground">
+            <div className="text-[11px] uppercase tracking-wider opacity-90 flex items-center gap-1.5"><Sparkles className="h-3 w-3" /> Confidence boost</div>
+            <p className="text-sm mt-2 font-medium">You don't need perfect grammar. Just keep speaking — that's how fluency builds.</p>
           </div>
         </aside>
 
-        {/* Main conversation */}
-        <div className="flex flex-col min-h-0">
-          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 space-y-4">
-            <div className="max-w-2xl mx-auto space-y-4">
+        {/* Main column */}
+        <div className="flex flex-col min-h-0 relative">
+          {/* AI Orb stage */}
+          <div className="relative pt-8 pb-4 grid place-items-center">
+            <div className="relative h-32 w-32 sm:h-40 sm:w-40">
+              <div className={`absolute inset-0 rounded-full bg-gradient-hero ${aiSpeaking ? "animate-orb" : "animate-bob"} shadow-orb`} />
+              <div className="absolute inset-0 rounded-full border border-white/20 animate-orb-spin" />
+              <div className="absolute inset-0 grid place-items-center text-4xl sm:text-5xl">{s.tutor.emoji}</div>
+            </div>
+            <div className="mt-3 text-center">
+              <div className="text-xs uppercase tracking-wider text-white/60">{aiSpeaking ? "Tutor speaking" : listening ? "You're speaking" : "Tap mic to reply"}</div>
+              {aiSpeaking && <div className="mt-1.5 flex justify-center"><VoiceWaveform /></div>}
+            </div>
+          </div>
+
+          {/* Transcript */}
+          <div className="flex-1 overflow-y-auto px-4 sm:px-6 pb-6">
+            <div className="max-w-2xl mx-auto space-y-3">
               {turns.map((t, idx) => (
                 <Bubble key={idx} turn={t} translate={translate} tutorEmoji={s.tutor.emoji} />
               ))}
               {listening && (
-                <div className="flex justify-end">
-                  <div className="max-w-[80%] rounded-2xl rounded-br-md bg-primary/20 px-4 py-3 text-sm border border-primary/30">
-                    <span className="text-muted-foreground italic">{transcript || "listening..."}</span>
+                <div className="flex justify-end animate-fade-in-up">
+                  <div className="max-w-[80%] rounded-2xl rounded-br-md bg-primary/30 px-4 py-3 text-sm border border-primary/40 backdrop-blur">
+                    <span className="text-white/90">{transcript || <em className="opacity-70">listening…</em>}</span>
                   </div>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Bottom control bar */}
-          <div className="border-t border-border bg-background/95 backdrop-blur px-4 sm:px-6 py-4 sm:py-5">
-            <div className="max-w-2xl mx-auto">
-              {listening && (
-                <div className="flex items-center gap-3 mb-3 justify-center">
-                  <VoiceWaveform />
-                  <span className="text-sm text-muted-foreground">Listening...</span>
+          {/* Hint sheet (toggle) */}
+          {showHints && (
+            <div className="px-4 sm:px-6 pb-3 animate-fade-in-up lg:hidden">
+              <div className="max-w-2xl mx-auto rounded-2xl bg-white/10 border border-white/15 backdrop-blur p-3">
+                <div className="text-[11px] uppercase tracking-wider text-white/70 flex items-center gap-1.5 mb-2"><Lightbulb className="h-3 w-3" /> Try saying</div>
+                <div className="flex flex-wrap gap-2">
+                  {s.hints.map((h) => (
+                    <span key={h} className="text-xs px-2.5 py-1.5 rounded-full bg-primary/25 text-white font-medium border border-primary/40">
+                      {h}
+                    </span>
+                  ))}
                 </div>
-              )}
-              <div className="flex items-center justify-center gap-4 sm:gap-6">
-                <IconBtn label="Replay AI">
+              </div>
+            </div>
+          )}
+
+          {/* Bottom control bar */}
+          <div className="border-t border-white/10 backdrop-blur-md bg-black/20 px-4 sm:px-6 py-4 sm:py-5 pb-[max(env(safe-area-inset-bottom),1rem)]">
+            <div className="max-w-2xl mx-auto">
+              <div className="flex items-center justify-center gap-3 sm:gap-5">
+                <IconBtn label="Replay slower" hint="0.75×">
                   <Volume2 className="h-5 w-5" />
                 </IconBtn>
+                <IconBtn label="Show hints" active={showHints} onClick={() => setShowHints((v) => !v)}>
+                  <Lightbulb className="h-5 w-5" />
+                </IconBtn>
                 <MicButton active={listening} onClick={toggleMic} />
+                <IconBtn label="Translate" active={translate} onClick={() => setTranslate((v) => !v)}>
+                  <Languages className="h-5 w-5" />
+                </IconBtn>
                 <IconBtn label="Retry" onClick={() => setTurns(seed)}>
                   <RotateCcw className="h-5 w-5" />
                 </IconBtn>
               </div>
-              <p className="text-center text-xs text-muted-foreground mt-3">
-                {listening ? "Speak naturally — tap to stop" : "Tap the mic to speak"}
+              <p className="text-center text-xs text-white/70 mt-3">
+                {listening ? "Speak naturally — tap to stop" : aiSpeaking ? "Listen carefully…" : "Hold a thought? Tap the mic when ready."}
               </p>
-              <div className="mt-3 flex justify-center">
+              <div className="mt-2 flex justify-center">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => navigate({ to: "/conversations/$scenarioId/result", params: { scenarioId: s.id } })}
-                  className="text-xs text-muted-foreground"
+                  className="text-xs text-white/60 hover:text-white hover:bg-white/10"
                 >
                   End & see results <X className="h-3 w-3 ml-1" />
                 </Button>
@@ -178,12 +216,18 @@ function Room() {
 function Bubble({ turn, translate, tutorEmoji }: { turn: Turn; translate: boolean; tutorEmoji: string }) {
   const isAI = turn.role === "ai";
   return (
-    <div className={`flex gap-2 ${isAI ? "" : "flex-row-reverse"}`}>
-      {isAI && <div className="text-2xl shrink-0 mt-1">{tutorEmoji}</div>}
-      <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm ${isAI ? "bg-card border border-border shadow-soft rounded-bl-md" : "bg-gradient-primary text-primary-foreground rounded-br-md shadow-soft"}`}>
+    <div className={`flex gap-2 animate-fade-in-up ${isAI ? "" : "flex-row-reverse"}`}>
+      {isAI && <div className="text-xl shrink-0 mt-1">{tutorEmoji}</div>}
+      <div
+        className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+          isAI
+            ? "bg-white/10 border border-white/15 text-white backdrop-blur rounded-bl-md"
+            : "bg-gradient-primary text-primary-foreground rounded-br-md shadow-glow"
+        }`}
+      >
         <p>{turn.text}</p>
         {translate && turn.translated && (
-          <p className={`text-xs mt-1.5 pt-1.5 border-t ${isAI ? "border-border text-muted-foreground" : "border-white/20 opacity-80"}`}>
+          <p className={`text-xs mt-1.5 pt-1.5 border-t ${isAI ? "border-white/15 text-white/70" : "border-white/30 opacity-90"}`}>
             {turn.translated}
           </p>
         )}
@@ -192,14 +236,36 @@ function Bubble({ turn, translate, tutorEmoji }: { turn: Turn; translate: boolea
   );
 }
 
-function IconBtn({ children, label, onClick }: { children: React.ReactNode; label: string; onClick?: () => void }) {
+function IconBtn({
+  children,
+  label,
+  onClick,
+  active,
+  hint,
+}: {
+  children: React.ReactNode;
+  label: string;
+  onClick?: () => void;
+  active?: boolean;
+  hint?: string;
+}) {
   return (
     <button
       onClick={onClick}
       aria-label={label}
-      className="h-12 w-12 rounded-full bg-card border border-border grid place-items-center text-muted-foreground hover:text-foreground hover:border-primary/40 transition shadow-soft"
+      title={label}
+      className={`relative h-12 w-12 sm:h-13 sm:w-13 rounded-2xl grid place-items-center transition shadow-soft ${
+        active
+          ? "bg-accent text-accent-foreground"
+          : "bg-white/10 border border-white/15 text-white/80 hover:bg-white/20 hover:text-white backdrop-blur"
+      }`}
     >
       {children}
+      {hint && (
+        <span className="absolute -bottom-1 -right-1 text-[9px] font-bold bg-secondary text-secondary-foreground rounded-full px-1 py-0.5 leading-none">
+          {hint}
+        </span>
+      )}
     </button>
   );
 }
