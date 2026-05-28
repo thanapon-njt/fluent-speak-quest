@@ -60,8 +60,25 @@ function Room() {
     }
   };
 
+  const useHint = (phrase: string) => {
+    if (listening || aiSpeaking) return;
+    setListening(true);
+    setTranscript(phrase);
+    setTimeout(() => {
+      setListening(false);
+      setTurns((t) => [...t, { role: "user", text: phrase }]);
+      setTranscript("");
+      setAiSpeaking(true);
+      setTimeout(() => {
+        setTurns((t) => [...t, { role: "ai", text: "Great — got it. Anything else with that?" }]);
+        setAiSpeaking(false);
+      }, 1400);
+    }, 900);
+  };
+
   const totalTurns = 5;
   const userTurns = turns.filter((t) => t.role === "user").length;
+  const stepNum = Math.min(totalTurns, userTurns + 1);
   const progress = Math.min(100, (userTurns / totalTurns) * 100);
 
   return (
@@ -93,14 +110,21 @@ function Room() {
         </button>
       </div>
 
-      {/* Progress strip with step dots */}
-      <div className="relative px-4 sm:px-6 py-2 bg-black/10 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-2xl mx-auto flex items-center gap-3">
-          <Gauge className="h-3.5 w-3.5 text-white/60" />
-          <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-accent to-primary-glow rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
+      {/* Progress strip with step indicator */}
+      <div className="relative px-4 sm:px-6 py-2.5 bg-black/10 backdrop-blur-md border-b border-white/5">
+        <div className="max-w-2xl mx-auto">
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] uppercase tracking-[0.18em] font-bold text-accent shrink-0">
+              Step {stepNum} / {totalTurns}
+            </span>
+            <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-accent to-primary-glow rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
+            </div>
+            <Gauge className="h-3.5 w-3.5 text-white/50 shrink-0" />
           </div>
-          <span className="text-[11px] font-medium text-white/70 tabular-nums">{userTurns}/{totalTurns}</span>
+          <p className="mt-1.5 text-[11px] text-white/70 truncate">
+            <span className="text-white/50">Objective:</span> {s.objective}
+          </p>
         </div>
       </div>
 
@@ -112,12 +136,17 @@ function Room() {
             <p className="text-sm mt-2 leading-relaxed">{s.objective}</p>
           </div>
           <div className="rounded-2xl bg-white/5 border border-white/10 p-4 backdrop-blur">
-            <div className="text-[11px] uppercase tracking-wider text-white/60 flex items-center gap-1.5"><Lightbulb className="h-3 w-3" /> Suggested phrases</div>
+            <div className="text-[11px] uppercase tracking-wider text-white/60 flex items-center gap-1.5"><Lightbulb className="h-3 w-3" /> Tap a phrase to try</div>
             <div className="mt-2.5 flex flex-wrap gap-2">
               {s.hints.map((h) => (
-                <span key={h} className="text-xs px-2.5 py-1.5 rounded-full bg-primary/20 text-primary-glow font-medium border border-primary/30">
+                <button
+                  key={h}
+                  onClick={() => useHint(h)}
+                  disabled={listening || aiSpeaking}
+                  className="text-xs px-2.5 py-1.5 rounded-full bg-primary/20 text-primary-glow font-medium border border-primary/30 hover:bg-primary/30 active:scale-95 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                >
                   {h}
-                </span>
+                </button>
               ))}
             </div>
           </div>
@@ -162,12 +191,17 @@ function Room() {
           {showHints && (
             <div className="px-4 sm:px-6 pb-3 animate-fade-in-up lg:hidden">
               <div className="max-w-2xl mx-auto rounded-2xl bg-white/10 border border-white/15 backdrop-blur p-3">
-                <div className="text-[11px] uppercase tracking-wider text-white/70 flex items-center gap-1.5 mb-2"><Lightbulb className="h-3 w-3" /> Try saying</div>
+                <div className="text-[11px] uppercase tracking-wider text-white/70 flex items-center gap-1.5 mb-2"><Lightbulb className="h-3 w-3" /> Tap to try saying</div>
                 <div className="flex flex-wrap gap-2">
                   {s.hints.map((h) => (
-                    <span key={h} className="text-xs px-2.5 py-1.5 rounded-full bg-primary/25 text-white font-medium border border-primary/40">
+                    <button
+                      key={h}
+                      onClick={() => { useHint(h); setShowHints(false); }}
+                      disabled={listening || aiSpeaking}
+                      className="text-xs px-2.5 py-1.5 rounded-full bg-primary/25 text-white font-medium border border-primary/40 hover:bg-primary/35 active:scale-95 transition disabled:opacity-40"
+                    >
                       {h}
-                    </span>
+                    </button>
                   ))}
                 </div>
               </div>
