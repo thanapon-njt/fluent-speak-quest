@@ -191,12 +191,17 @@ function Room() {
           {showHints && (
             <div className="px-4 sm:px-6 pb-3 animate-fade-in-up lg:hidden">
               <div className="max-w-2xl mx-auto rounded-2xl bg-white/10 border border-white/15 backdrop-blur p-3">
-                <div className="text-[11px] uppercase tracking-wider text-white/70 flex items-center gap-1.5 mb-2"><Lightbulb className="h-3 w-3" /> Try saying</div>
+                <div className="text-[11px] uppercase tracking-wider text-white/70 flex items-center gap-1.5 mb-2"><Lightbulb className="h-3 w-3" /> Tap to try saying</div>
                 <div className="flex flex-wrap gap-2">
                   {s.hints.map((h) => (
-                    <span key={h} className="text-xs px-2.5 py-1.5 rounded-full bg-primary/25 text-white font-medium border border-primary/40">
+                    <button
+                      key={h}
+                      onClick={() => { useHint(h); setShowHints(false); }}
+                      disabled={listening || aiSpeaking}
+                      className="text-xs px-2.5 py-1.5 rounded-full bg-primary/25 text-white font-medium border border-primary/40 hover:bg-primary/35 active:scale-95 transition disabled:opacity-40"
+                    >
                       {h}
-                    </span>
+                    </button>
                   ))}
                 </div>
               </div>
