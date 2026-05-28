@@ -60,8 +60,25 @@ function Room() {
     }
   };
 
+  const useHint = (phrase: string) => {
+    if (listening || aiSpeaking) return;
+    setListening(true);
+    setTranscript(phrase);
+    setTimeout(() => {
+      setListening(false);
+      setTurns((t) => [...t, { role: "user", text: phrase }]);
+      setTranscript("");
+      setAiSpeaking(true);
+      setTimeout(() => {
+        setTurns((t) => [...t, { role: "ai", text: "Great — got it. Anything else with that?" }]);
+        setAiSpeaking(false);
+      }, 1400);
+    }, 900);
+  };
+
   const totalTurns = 5;
   const userTurns = turns.filter((t) => t.role === "user").length;
+  const stepNum = Math.min(totalTurns, userTurns + 1);
   const progress = Math.min(100, (userTurns / totalTurns) * 100);
 
   return (
