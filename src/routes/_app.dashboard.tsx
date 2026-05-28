@@ -25,8 +25,11 @@ function Dashboard() {
       <div className="animate-fade-in-up">
         <p className="text-sm text-muted-foreground">Welcome back, {user.name.split(" ")[0]} 👋</p>
         <h1 className="font-display text-2xl sm:text-3xl font-bold mt-1">
-          You're <span className="text-primary">{xpPct}%</span> closer to confident speaking.
+          Ready for today's challenge?
         </h1>
+        <p className="text-sm text-muted-foreground mt-1.5">
+          You're <span className="text-primary font-semibold">{xpPct}%</span> closer to confident speaking — keep going.
+        </p>
       </div>
 
       {/* Gamified stat strip */}
