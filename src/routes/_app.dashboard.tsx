@@ -67,9 +67,8 @@ function Dashboard() {
         <div className="relative p-6 sm:p-8">
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 backdrop-blur px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" /> Continue your journey
+              <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" /> Continue your speaking journey
             </span>
-            <span className="text-[11px] opacity-80">Mission · {current.category}</span>
           </div>
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold mt-3 leading-tight">{current.title}</h2>
           <p className="text-sm sm:text-base opacity-90 mt-2 max-w-lg">{current.objective}</p>
