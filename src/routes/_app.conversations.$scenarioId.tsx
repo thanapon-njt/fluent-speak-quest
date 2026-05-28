@@ -136,12 +136,17 @@ function Room() {
             <p className="text-sm mt-2 leading-relaxed">{s.objective}</p>
           </div>
           <div className="rounded-2xl bg-white/5 border border-white/10 p-4 backdrop-blur">
-            <div className="text-[11px] uppercase tracking-wider text-white/60 flex items-center gap-1.5"><Lightbulb className="h-3 w-3" /> Suggested phrases</div>
+            <div className="text-[11px] uppercase tracking-wider text-white/60 flex items-center gap-1.5"><Lightbulb className="h-3 w-3" /> Tap a phrase to try</div>
             <div className="mt-2.5 flex flex-wrap gap-2">
               {s.hints.map((h) => (
-                <span key={h} className="text-xs px-2.5 py-1.5 rounded-full bg-primary/20 text-primary-glow font-medium border border-primary/30">
+                <button
+                  key={h}
+                  onClick={() => useHint(h)}
+                  disabled={listening || aiSpeaking}
+                  className="text-xs px-2.5 py-1.5 rounded-full bg-primary/20 text-primary-glow font-medium border border-primary/30 hover:bg-primary/30 active:scale-95 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                >
                   {h}
-                </span>
+                </button>
               ))}
             </div>
           </div>
