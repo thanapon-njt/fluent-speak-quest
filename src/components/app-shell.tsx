@@ -109,7 +109,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </header>
         )}
 
-        <main className={`flex-1 ${immersive ? "" : "pb-24 md:pb-0"}`}>{children ?? <Outlet />}</main>
+        <main className={`flex-1 ${immersive ? "" : "pb-32 md:pb-0"}`}>{children ?? <Outlet />}</main>
 
         {/* Mobile bottom nav — elevated Speak CTA in center */}
         {!immersive && (
