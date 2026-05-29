@@ -18,7 +18,7 @@ import { Route as AppReviewRouteImport } from './routes/_app.review'
 import { Route as AppProfileRouteImport } from './routes/_app.profile'
 import { Route as AppMapRouteImport } from './routes/_app.map'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
-import { Route as AppConversationsRouteImport } from './routes/_app.conversations'
+import { Route as AppConversationsIndexRouteImport } from './routes/_app.conversations.index'
 import { Route as AppVocabularyChapterIdRouteImport } from './routes/_app.vocabulary.$chapterId'
 import { Route as AppQuizChapterIdRouteImport } from './routes/_app.quiz.$chapterId'
 import { Route as AppGrammarChapterIdRouteImport } from './routes/_app.grammar.$chapterId'
@@ -70,9 +70,9 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
-const AppConversationsRoute = AppConversationsRouteImport.update({
-  id: '/conversations',
-  path: '/conversations',
+const AppConversationsIndexRoute = AppConversationsIndexRouteImport.update({
+  id: '/conversations/',
+  path: '/conversations/',
   getParentRoute: () => AppRoute,
 } as any)
 const AppVocabularyChapterIdRoute = AppVocabularyChapterIdRouteImport.update({
@@ -92,9 +92,9 @@ const AppGrammarChapterIdRoute = AppGrammarChapterIdRouteImport.update({
 } as any)
 const AppConversationsScenarioIdRoute =
   AppConversationsScenarioIdRouteImport.update({
-    id: '/$scenarioId',
-    path: '/$scenarioId',
-    getParentRoute: () => AppConversationsRoute,
+    id: '/conversations/$scenarioId',
+    path: '/conversations/$scenarioId',
+    getParentRoute: () => AppRoute,
   } as any)
 const AppChaptersChapterIdRoute = AppChaptersChapterIdRouteImport.update({
   id: '/chapters/$chapterId',
@@ -112,7 +112,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/conversations': typeof AppConversationsRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
   '/map': typeof AppMapRoute
   '/profile': typeof AppProfileRoute
@@ -123,13 +122,13 @@ export interface FileRoutesByFullPath {
   '/grammar/$chapterId': typeof AppGrammarChapterIdRoute
   '/quiz/$chapterId': typeof AppQuizChapterIdRoute
   '/vocabulary/$chapterId': typeof AppVocabularyChapterIdRoute
+  '/conversations/': typeof AppConversationsIndexRoute
   '/conversations/$scenarioId/result': typeof AppConversationsScenarioIdResultRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/conversations': typeof AppConversationsRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
   '/map': typeof AppMapRoute
   '/profile': typeof AppProfileRoute
@@ -140,6 +139,7 @@ export interface FileRoutesByTo {
   '/grammar/$chapterId': typeof AppGrammarChapterIdRoute
   '/quiz/$chapterId': typeof AppQuizChapterIdRoute
   '/vocabulary/$chapterId': typeof AppVocabularyChapterIdRoute
+  '/conversations': typeof AppConversationsIndexRoute
   '/conversations/$scenarioId/result': typeof AppConversationsScenarioIdResultRoute
 }
 export interface FileRoutesById {
@@ -148,7 +148,6 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/_app/conversations': typeof AppConversationsRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/map': typeof AppMapRoute
   '/_app/profile': typeof AppProfileRoute
@@ -159,6 +158,7 @@ export interface FileRoutesById {
   '/_app/grammar/$chapterId': typeof AppGrammarChapterIdRoute
   '/_app/quiz/$chapterId': typeof AppQuizChapterIdRoute
   '/_app/vocabulary/$chapterId': typeof AppVocabularyChapterIdRoute
+  '/_app/conversations/': typeof AppConversationsIndexRoute
   '/_app/conversations/$scenarioId/result': typeof AppConversationsScenarioIdResultRoute
 }
 export interface FileRouteTypes {
@@ -167,7 +167,6 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
-    | '/conversations'
     | '/dashboard'
     | '/map'
     | '/profile'
@@ -178,13 +177,13 @@ export interface FileRouteTypes {
     | '/grammar/$chapterId'
     | '/quiz/$chapterId'
     | '/vocabulary/$chapterId'
+    | '/conversations/'
     | '/conversations/$scenarioId/result'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/register'
-    | '/conversations'
     | '/dashboard'
     | '/map'
     | '/profile'
@@ -195,6 +194,7 @@ export interface FileRouteTypes {
     | '/grammar/$chapterId'
     | '/quiz/$chapterId'
     | '/vocabulary/$chapterId'
+    | '/conversations'
     | '/conversations/$scenarioId/result'
   id:
     | '__root__'
@@ -202,7 +202,6 @@ export interface FileRouteTypes {
     | '/_app'
     | '/login'
     | '/register'
-    | '/_app/conversations'
     | '/_app/dashboard'
     | '/_app/map'
     | '/_app/profile'
@@ -213,6 +212,7 @@ export interface FileRouteTypes {
     | '/_app/grammar/$chapterId'
     | '/_app/quiz/$chapterId'
     | '/_app/vocabulary/$chapterId'
+    | '/_app/conversations/'
     | '/_app/conversations/$scenarioId/result'
   fileRoutesById: FileRoutesById
 }
@@ -288,11 +288,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/conversations': {
-      id: '/_app/conversations'
+    '/_app/conversations/': {
+      id: '/_app/conversations/'
       path: '/conversations'
-      fullPath: '/conversations'
-      preLoaderRoute: typeof AppConversationsRouteImport
+      fullPath: '/conversations/'
+      preLoaderRoute: typeof AppConversationsIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/vocabulary/$chapterId': {
@@ -318,10 +318,10 @@ declare module '@tanstack/react-router' {
     }
     '/_app/conversations/$scenarioId': {
       id: '/_app/conversations/$scenarioId'
-      path: '/$scenarioId'
+      path: '/conversations/$scenarioId'
       fullPath: '/conversations/$scenarioId'
       preLoaderRoute: typeof AppConversationsScenarioIdRouteImport
-      parentRoute: typeof AppConversationsRoute
+      parentRoute: typeof AppRoute
     }
     '/_app/chapters/$chapterId': {
       id: '/_app/chapters/$chapterId'
@@ -355,41 +355,32 @@ const AppConversationsScenarioIdRouteWithChildren =
     AppConversationsScenarioIdRouteChildren,
   )
 
-interface AppConversationsRouteChildren {
-  AppConversationsScenarioIdRoute: typeof AppConversationsScenarioIdRouteWithChildren
-}
-
-const AppConversationsRouteChildren: AppConversationsRouteChildren = {
-  AppConversationsScenarioIdRoute: AppConversationsScenarioIdRouteWithChildren,
-}
-
-const AppConversationsRouteWithChildren =
-  AppConversationsRoute._addFileChildren(AppConversationsRouteChildren)
-
 interface AppRouteChildren {
-  AppConversationsRoute: typeof AppConversationsRouteWithChildren
   AppDashboardRoute: typeof AppDashboardRoute
   AppMapRoute: typeof AppMapRoute
   AppProfileRoute: typeof AppProfileRoute
   AppReviewRoute: typeof AppReviewRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppChaptersChapterIdRoute: typeof AppChaptersChapterIdRoute
+  AppConversationsScenarioIdRoute: typeof AppConversationsScenarioIdRouteWithChildren
   AppGrammarChapterIdRoute: typeof AppGrammarChapterIdRoute
   AppQuizChapterIdRoute: typeof AppQuizChapterIdRoute
   AppVocabularyChapterIdRoute: typeof AppVocabularyChapterIdRoute
+  AppConversationsIndexRoute: typeof AppConversationsIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
-  AppConversationsRoute: AppConversationsRouteWithChildren,
   AppDashboardRoute: AppDashboardRoute,
   AppMapRoute: AppMapRoute,
   AppProfileRoute: AppProfileRoute,
   AppReviewRoute: AppReviewRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppChaptersChapterIdRoute: AppChaptersChapterIdRoute,
+  AppConversationsScenarioIdRoute: AppConversationsScenarioIdRouteWithChildren,
   AppGrammarChapterIdRoute: AppGrammarChapterIdRoute,
   AppQuizChapterIdRoute: AppQuizChapterIdRoute,
   AppVocabularyChapterIdRoute: AppVocabularyChapterIdRoute,
+  AppConversationsIndexRoute: AppConversationsIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -403,3 +394,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

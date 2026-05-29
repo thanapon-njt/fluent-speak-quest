@@ -3,7 +3,7 @@ import { useState } from "react";
 import { scenarios, type Scenario } from "@/data/mock";
 import { Clock, Filter, Mic } from "lucide-react";
 
-export const Route = createFileRoute("/_app/conversations")({
+export const Route = createFileRoute("/_app/conversations/")({
   head: () => ({
     meta: [
       { title: "AI Conversation Lobby — Fluent" },
