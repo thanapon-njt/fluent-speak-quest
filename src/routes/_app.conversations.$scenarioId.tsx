@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { getScenario, type Scenario } from "@/data/mock";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import {
   Sparkles,
   Gauge,
   Check,
+  Circle,
 } from "lucide-react";
 import { MicButton, VoiceWaveform } from "@/components/mic-button";
 
