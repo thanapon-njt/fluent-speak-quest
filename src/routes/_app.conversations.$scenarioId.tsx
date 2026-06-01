@@ -144,7 +144,7 @@ function Room() {
   const totalTurns = Math.max(5, s.hints.length);
   const userTurns = turns.filter((t) => t.role === "user").length;
   const stepNum = Math.min(totalTurns, userTurns + 1);
-  void progress;
+  
   const status: "idle" | "listening" | "speaking" | "thinking" =
     aiThinking ? "thinking" : aiSpeaking ? "speaking" : listening ? "listening" : "idle";
   // Derive sub-objectives from hints (each hint = one mini goal)
