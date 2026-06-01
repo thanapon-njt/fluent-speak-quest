@@ -292,19 +292,28 @@ function Room() {
           {/* AI Orb stage */}
           <div className="relative pt-6 pb-2 grid place-items-center">
             <div className="relative h-28 w-28 sm:h-36 sm:w-36">
-              {/* Listening pulse rings */}
+              {/* Listening pulse rings — stronger green glow */}
               {listening && (
                 <>
-                  <span className="absolute inset-0 rounded-full border-2 border-accent/60 animate-listen-ring" />
+                  <span className="absolute inset-0 rounded-full border-2 border-success/70 animate-listen-ring" />
                   <span
-                    className="absolute inset-0 rounded-full border-2 border-accent/40 animate-listen-ring"
+                    className="absolute inset-0 rounded-full border-2 border-success/40 animate-listen-ring"
                     style={{ animationDelay: "0.6s" }}
                   />
+                  <span className="absolute -inset-2 rounded-full bg-success/20 blur-2xl" />
                 </>
+              )}
+              {/* Idle soft glow */}
+              {status === "idle" && (
+                <span className="absolute -inset-3 rounded-full bg-primary/15 blur-2xl" />
+              )}
+              {/* Speaking breathing aura */}
+              {aiSpeaking && (
+                <span className="absolute -inset-3 rounded-full bg-accent/25 blur-2xl animate-orb" />
               )}
               <div
                 className={`absolute inset-0 rounded-full bg-gradient-hero shadow-orb ${
-                  aiSpeaking ? "animate-orb" : listening ? "" : "animate-bob"
+                  aiSpeaking ? "animate-orb" : listening ? "" : aiThinking ? "" : "animate-bob"
                 }`}
               />
               <div className="absolute inset-0 rounded-full border border-white/20 animate-orb-spin" />
@@ -318,19 +327,34 @@ function Room() {
                   status === "speaking"
                     ? "text-accent"
                     : status === "listening"
-                      ? "text-primary-glow"
-                      : "text-white/55"
+                      ? "text-success"
+                      : status === "thinking"
+                        ? "text-primary-glow"
+                        : "text-white/55"
                 }`}
               >
                 {status === "speaking"
                   ? "Tutor speaking"
                   : status === "listening"
                     ? "Listening… speak naturally"
-                    : "Tap the mic to reply"}
+                    : status === "thinking"
+                      ? "Thinking…"
+                      : "Tap the mic to reply"}
               </div>
               {(aiSpeaking || listening) && (
                 <div className="mt-1.5 flex justify-center">
                   <VoiceWaveform active />
+                </div>
+              )}
+              {aiThinking && (
+                <div className="mt-2 flex justify-center gap-1">
+                  {[0, 1, 2].map((i) => (
+                    <span
+                      key={i}
+                      className="h-1.5 w-1.5 rounded-full bg-primary-glow animate-bob"
+                      style={{ animationDelay: `${i * 0.15}s` }}
+                    />
+                  ))}
                 </div>
               )}
             </div>
