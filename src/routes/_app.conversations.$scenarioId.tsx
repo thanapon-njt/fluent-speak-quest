@@ -56,10 +56,16 @@ const encouragements = [
 
 function Room() {
   const s = Route.useLoaderData() as Scenario;
+  const location = useLocation();
+  // If we're on a child route (e.g. /result), defer to it
+  if (location.pathname.replace(/\/$/, "").endsWith("/result")) {
+    return <Outlet />;
+  }
   const navigate = useNavigate();
   const [turns, setTurns] = useState<Turn[]>(seed);
   const [listening, setListening] = useState(false);
   const [aiSpeaking, setAiSpeaking] = useState(false);
+  const [aiThinking, setAiThinking] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [translate, setTranslate] = useState(false);
   const [showHints, setShowHints] = useState(false);
