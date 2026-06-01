@@ -236,6 +236,29 @@ function Room() {
               <Target className="h-3 w-3" /> Mission objective
             </div>
             <p className="text-sm mt-2 leading-relaxed">{s.objective}</p>
+            <ul className="mt-3 space-y-1.5">
+              {subObjectives.map((obj, i) => {
+                const done = i < userTurns;
+                const active = i === userTurns;
+                return (
+                  <li
+                    key={obj}
+                    className={`flex items-start gap-2 text-xs transition-all ${
+                      done ? "text-success" : active ? "text-white" : "text-white/40"
+                    }`}
+                  >
+                    <span className="mt-0.5 shrink-0">
+                      {done ? (
+                        <Check className="h-3.5 w-3.5 animate-xp-pop" />
+                      ) : (
+                        <Circle className={`h-3.5 w-3.5 ${active ? "text-accent" : ""}`} />
+                      )}
+                    </span>
+                    <span className={done ? "line-through opacity-80" : ""}>{obj}</span>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
           <div className="rounded-2xl bg-white/5 border border-white/10 p-4 backdrop-blur">
             <div className="text-[11px] uppercase tracking-wider text-white/60 flex items-center gap-1.5">
