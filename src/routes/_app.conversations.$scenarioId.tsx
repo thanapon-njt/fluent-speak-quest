@@ -104,20 +104,24 @@ function Room() {
         setTurns((t) => [...t, { role: "user", text: transcript }]);
         setTranscript("");
         celebrate();
-        setAiSpeaking(true);
+        setAiThinking(true);
         setTimeout(() => {
-          setTurns((t) => [
-            ...t,
-            { role: "ai", text: "Perfect choice — that'll be $5.40. Have a great day!" },
-          ]);
-          setAiSpeaking(false);
-        }, 1400);
+          setAiThinking(false);
+          setAiSpeaking(true);
+          setTimeout(() => {
+            setTurns((t) => [
+              ...t,
+              { role: "ai", text: "Perfect choice — that'll be $5.40. Have a great day!" },
+            ]);
+            setAiSpeaking(false);
+          }, 1400);
+        }, 750);
       }
     }
   };
 
   const useHint = (phrase: string) => {
-    if (listening || aiSpeaking) return;
+    if (listening || aiSpeaking || aiThinking) return;
     setListening(true);
     setTranscript(phrase);
     setTimeout(() => {
@@ -125,19 +129,26 @@ function Room() {
       setTurns((t) => [...t, { role: "user", text: phrase }]);
       setTranscript("");
       celebrate();
-      setAiSpeaking(true);
+      setAiThinking(true);
       setTimeout(() => {
-        setTurns((t) => [...t, { role: "ai", text: "Great — got it. Anything else with that?" }]);
-        setAiSpeaking(false);
-      }, 1400);
+        setAiThinking(false);
+        setAiSpeaking(true);
+        setTimeout(() => {
+          setTurns((t) => [...t, { role: "ai", text: "Great — got it. Anything else with that?" }]);
+          setAiSpeaking(false);
+        }, 1400);
+      }, 750);
     }, 900);
   };
 
-  const totalTurns = 5;
+  const totalTurns = Math.max(5, s.hints.length);
   const userTurns = turns.filter((t) => t.role === "user").length;
   const stepNum = Math.min(totalTurns, userTurns + 1);
   const progress = Math.min(100, (userTurns / totalTurns) * 100);
-  const status: "idle" | "listening" | "speaking" = aiSpeaking ? "speaking" : listening ? "listening" : "idle";
+  const status: "idle" | "listening" | "speaking" | "thinking" =
+    aiThinking ? "thinking" : aiSpeaking ? "speaking" : listening ? "listening" : "idle";
+  // Derive sub-objectives from hints (each hint = one mini goal)
+  const subObjectives = s.hints.slice(0, totalTurns);
 
   return (
     <div className="h-[100dvh] flex flex-col bg-gradient-immersive text-white relative overflow-hidden">
