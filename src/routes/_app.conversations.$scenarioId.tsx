@@ -385,6 +385,22 @@ function Room() {
                   </div>
                 </div>
               )}
+              {aiThinking && (
+                <div className="flex gap-2 animate-fade-in-up">
+                  <div className="text-xl shrink-0 mt-1">{s.tutor.emoji}</div>
+                  <div className="rounded-2xl rounded-bl-md bg-white/10 border border-white/15 px-4 py-3 backdrop-blur">
+                    <span className="flex items-center gap-1">
+                      {[0, 1, 2].map((i) => (
+                        <span
+                          key={i}
+                          className="h-1.5 w-1.5 rounded-full bg-white/70 animate-bob"
+                          style={{ animationDelay: `${i * 0.15}s` }}
+                        />
+                      ))}
+                    </span>
+                  </div>
+                </div>
+              )}
               <div ref={transcriptEndRef} />
             </div>
           </div>
