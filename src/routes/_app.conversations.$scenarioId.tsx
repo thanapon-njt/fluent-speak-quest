@@ -199,13 +199,25 @@ function Room() {
             <span className="text-[10px] uppercase tracking-[0.18em] font-bold text-accent shrink-0">
               Step {stepNum} / {totalTurns}
             </span>
-            <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-accent to-primary-glow rounded-full transition-all duration-500 relative"
-                style={{ width: `${progress}%` }}
-              >
-                <span className="absolute inset-0 animate-shimmer" />
-              </div>
+            <div className="flex-1 flex items-center gap-1">
+              {Array.from({ length: totalTurns }).map((_, i) => {
+                const done = i < userTurns;
+                const current = i === userTurns;
+                return (
+                  <span
+                    key={i}
+                    className={`flex-1 h-1.5 rounded-full transition-all duration-500 relative overflow-hidden ${
+                      done
+                        ? "bg-gradient-to-r from-accent to-primary-glow"
+                        : current
+                          ? "bg-white/25"
+                          : "bg-white/10"
+                    }`}
+                  >
+                    {current && <span className="absolute inset-0 animate-shimmer" />}
+                  </span>
+                );
+              })}
             </div>
             <Gauge className="h-3.5 w-3.5 text-white/50 shrink-0" />
           </div>
