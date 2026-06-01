@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { getScenario, type Scenario } from "@/data/mock";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import {
   Sparkles,
   Gauge,
   Check,
+  Circle,
 } from "lucide-react";
 import { MicButton, VoiceWaveform } from "@/components/mic-button";
 
@@ -25,8 +26,16 @@ export const Route = createFileRoute("/_app/conversations/$scenarioId")({
     if (!s) throw notFound();
     return s;
   },
-  component: Room,
+  component: RouteComponent,
 });
+
+function RouteComponent() {
+  const location = useLocation();
+  if (location.pathname.replace(/\/$/, "").endsWith("/result")) {
+    return <Outlet />;
+  }
+  return <Room />;
+}
 
 type Turn = { role: "ai" | "user"; text: string; translated?: string };
 
@@ -59,6 +68,7 @@ function Room() {
   const [turns, setTurns] = useState<Turn[]>(seed);
   const [listening, setListening] = useState(false);
   const [aiSpeaking, setAiSpeaking] = useState(false);
+  const [aiThinking, setAiThinking] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [translate, setTranslate] = useState(false);
   const [showHints, setShowHints] = useState(false);
@@ -94,20 +104,24 @@ function Room() {
         setTurns((t) => [...t, { role: "user", text: transcript }]);
         setTranscript("");
         celebrate();
-        setAiSpeaking(true);
+        setAiThinking(true);
         setTimeout(() => {
-          setTurns((t) => [
-            ...t,
-            { role: "ai", text: "Perfect choice — that'll be $5.40. Have a great day!" },
-          ]);
-          setAiSpeaking(false);
-        }, 1400);
+          setAiThinking(false);
+          setAiSpeaking(true);
+          setTimeout(() => {
+            setTurns((t) => [
+              ...t,
+              { role: "ai", text: "Perfect choice — that'll be $5.40. Have a great day!" },
+            ]);
+            setAiSpeaking(false);
+          }, 1400);
+        }, 750);
       }
     }
   };
 
   const useHint = (phrase: string) => {
-    if (listening || aiSpeaking) return;
+    if (listening || aiSpeaking || aiThinking) return;
     setListening(true);
     setTranscript(phrase);
     setTimeout(() => {
@@ -115,19 +129,26 @@ function Room() {
       setTurns((t) => [...t, { role: "user", text: phrase }]);
       setTranscript("");
       celebrate();
-      setAiSpeaking(true);
+      setAiThinking(true);
       setTimeout(() => {
-        setTurns((t) => [...t, { role: "ai", text: "Great — got it. Anything else with that?" }]);
-        setAiSpeaking(false);
-      }, 1400);
+        setAiThinking(false);
+        setAiSpeaking(true);
+        setTimeout(() => {
+          setTurns((t) => [...t, { role: "ai", text: "Great — got it. Anything else with that?" }]);
+          setAiSpeaking(false);
+        }, 1400);
+      }, 750);
     }, 900);
   };
 
-  const totalTurns = 5;
+  const totalTurns = Math.max(5, s.hints.length);
   const userTurns = turns.filter((t) => t.role === "user").length;
   const stepNum = Math.min(totalTurns, userTurns + 1);
-  const progress = Math.min(100, (userTurns / totalTurns) * 100);
-  const status: "idle" | "listening" | "speaking" = aiSpeaking ? "speaking" : listening ? "listening" : "idle";
+  
+  const status: "idle" | "listening" | "speaking" | "thinking" =
+    aiThinking ? "thinking" : aiSpeaking ? "speaking" : listening ? "listening" : "idle";
+  // Derive sub-objectives from hints (each hint = one mini goal)
+  const subObjectives = s.hints.slice(0, totalTurns);
 
   return (
     <div className="h-[100dvh] flex flex-col bg-gradient-immersive text-white relative overflow-hidden">
@@ -178,13 +199,25 @@ function Room() {
             <span className="text-[10px] uppercase tracking-[0.18em] font-bold text-accent shrink-0">
               Step {stepNum} / {totalTurns}
             </span>
-            <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-accent to-primary-glow rounded-full transition-all duration-500 relative"
-                style={{ width: `${progress}%` }}
-              >
-                <span className="absolute inset-0 animate-shimmer" />
-              </div>
+            <div className="flex-1 flex items-center gap-1">
+              {Array.from({ length: totalTurns }).map((_, i) => {
+                const done = i < userTurns;
+                const current = i === userTurns;
+                return (
+                  <span
+                    key={i}
+                    className={`flex-1 h-1.5 rounded-full transition-all duration-500 relative overflow-hidden ${
+                      done
+                        ? "bg-gradient-to-r from-accent to-primary-glow"
+                        : current
+                          ? "bg-white/25"
+                          : "bg-white/10"
+                    }`}
+                  >
+                    {current && <span className="absolute inset-0 animate-shimmer" />}
+                  </span>
+                );
+              })}
             </div>
             <Gauge className="h-3.5 w-3.5 text-white/50 shrink-0" />
           </div>
@@ -203,6 +236,29 @@ function Room() {
               <Target className="h-3 w-3" /> Mission objective
             </div>
             <p className="text-sm mt-2 leading-relaxed">{s.objective}</p>
+            <ul className="mt-3 space-y-1.5">
+              {subObjectives.map((obj, i) => {
+                const done = i < userTurns;
+                const active = i === userTurns;
+                return (
+                  <li
+                    key={obj}
+                    className={`flex items-start gap-2 text-xs transition-all ${
+                      done ? "text-success" : active ? "text-white" : "text-white/40"
+                    }`}
+                  >
+                    <span className="mt-0.5 shrink-0">
+                      {done ? (
+                        <Check className="h-3.5 w-3.5 animate-xp-pop" />
+                      ) : (
+                        <Circle className={`h-3.5 w-3.5 ${active ? "text-accent" : ""}`} />
+                      )}
+                    </span>
+                    <span className={done ? "line-through opacity-80" : ""}>{obj}</span>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
           <div className="rounded-2xl bg-white/5 border border-white/10 p-4 backdrop-blur">
             <div className="text-[11px] uppercase tracking-wider text-white/60 flex items-center gap-1.5">
@@ -236,19 +292,28 @@ function Room() {
           {/* AI Orb stage */}
           <div className="relative pt-6 pb-2 grid place-items-center">
             <div className="relative h-28 w-28 sm:h-36 sm:w-36">
-              {/* Listening pulse rings */}
+              {/* Listening pulse rings — stronger green glow */}
               {listening && (
                 <>
-                  <span className="absolute inset-0 rounded-full border-2 border-accent/60 animate-listen-ring" />
+                  <span className="absolute inset-0 rounded-full border-2 border-success/70 animate-listen-ring" />
                   <span
-                    className="absolute inset-0 rounded-full border-2 border-accent/40 animate-listen-ring"
+                    className="absolute inset-0 rounded-full border-2 border-success/40 animate-listen-ring"
                     style={{ animationDelay: "0.6s" }}
                   />
+                  <span className="absolute -inset-2 rounded-full bg-success/20 blur-2xl" />
                 </>
+              )}
+              {/* Idle soft glow */}
+              {status === "idle" && (
+                <span className="absolute -inset-3 rounded-full bg-primary/15 blur-2xl" />
+              )}
+              {/* Speaking breathing aura */}
+              {aiSpeaking && (
+                <span className="absolute -inset-3 rounded-full bg-accent/25 blur-2xl animate-orb" />
               )}
               <div
                 className={`absolute inset-0 rounded-full bg-gradient-hero shadow-orb ${
-                  aiSpeaking ? "animate-orb" : listening ? "" : "animate-bob"
+                  aiSpeaking ? "animate-orb" : listening ? "" : aiThinking ? "" : "animate-bob"
                 }`}
               />
               <div className="absolute inset-0 rounded-full border border-white/20 animate-orb-spin" />
@@ -262,19 +327,34 @@ function Room() {
                   status === "speaking"
                     ? "text-accent"
                     : status === "listening"
-                      ? "text-primary-glow"
-                      : "text-white/55"
+                      ? "text-success"
+                      : status === "thinking"
+                        ? "text-primary-glow"
+                        : "text-white/55"
                 }`}
               >
                 {status === "speaking"
                   ? "Tutor speaking"
                   : status === "listening"
                     ? "Listening… speak naturally"
-                    : "Tap the mic to reply"}
+                    : status === "thinking"
+                      ? "Thinking…"
+                      : "Tap the mic to reply"}
               </div>
               {(aiSpeaking || listening) && (
                 <div className="mt-1.5 flex justify-center">
                   <VoiceWaveform active />
+                </div>
+              )}
+              {aiThinking && (
+                <div className="mt-2 flex justify-center gap-1">
+                  {[0, 1, 2].map((i) => (
+                    <span
+                      key={i}
+                      className="h-1.5 w-1.5 rounded-full bg-primary-glow animate-bob"
+                      style={{ animationDelay: `${i * 0.15}s` }}
+                    />
+                  ))}
                 </div>
               )}
             </div>
@@ -301,6 +381,22 @@ function Room() {
                     <span className="text-white">
                       {transcript || <em className="opacity-70">listening…</em>}
                       <span className="inline-block w-0.5 h-3.5 bg-white align-middle ml-0.5 animate-caret" />
+                    </span>
+                  </div>
+                </div>
+              )}
+              {aiThinking && (
+                <div className="flex gap-2 animate-fade-in-up">
+                  <div className="text-xl shrink-0 mt-1">{s.tutor.emoji}</div>
+                  <div className="rounded-2xl rounded-bl-md bg-white/10 border border-white/15 px-4 py-3 backdrop-blur">
+                    <span className="flex items-center gap-1">
+                      {[0, 1, 2].map((i) => (
+                        <span
+                          key={i}
+                          className="h-1.5 w-1.5 rounded-full bg-white/70 animate-bob"
+                          style={{ animationDelay: `${i * 0.15}s` }}
+                        />
+                      ))}
                     </span>
                   </div>
                 </div>
