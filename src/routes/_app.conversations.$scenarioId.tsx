@@ -26,8 +26,16 @@ export const Route = createFileRoute("/_app/conversations/$scenarioId")({
     if (!s) throw notFound();
     return s;
   },
-  component: Room,
+  component: RouteComponent,
 });
+
+function RouteComponent() {
+  const location = useLocation();
+  if (location.pathname.replace(/\/$/, "").endsWith("/result")) {
+    return <Outlet />;
+  }
+  return <Room />;
+}
 
 type Turn = { role: "ai" | "user"; text: string; translated?: string };
 
