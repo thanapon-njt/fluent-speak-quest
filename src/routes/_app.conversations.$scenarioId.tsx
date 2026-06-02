@@ -293,8 +293,8 @@ function Room() {
             <div className="text-[11px] uppercase tracking-wider opacity-90 flex items-center gap-1.5">
               <Sparkles className="h-3 w-3" /> Confidence boost
             </div>
-            <p className="text-sm mt-2 font-medium">
-              You don't need perfect grammar. Just keep speaking — that's how fluency builds.
+            <p className="text-sm mt-2 font-medium transition-all" key={confidenceMsg}>
+              {confidenceMsg}
             </p>
           </div>
         </aside>
