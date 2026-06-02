@@ -460,7 +460,7 @@ function Room() {
                 </IconBtn>
 
                 <div className="relative">
-                  <MicButton active={listening} onClick={toggleMic} />
+                  <MicButton active={listening} processing={aiThinking} onClick={toggleMic} />
                 </div>
 
                 <IconBtn label="Translate" active={translate} onClick={() => setTranslate((v) => !v)}>
