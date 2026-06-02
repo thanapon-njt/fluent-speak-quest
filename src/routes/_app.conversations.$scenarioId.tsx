@@ -54,12 +54,19 @@ const seed: Turn[] = [
 ];
 
 const encouragements = [
-  "Nice — your rhythm is improving 🌱",
-  "That sounded natural. Keep going!",
-  "Confidence boost +1 ⚡",
-  "Great pace — don't stop now",
-  "You're doing better than you think 💚",
+  "Great sentence structure.",
+  "Nice use of natural English.",
+  "Good pronunciation attempt.",
+  "Communication matters more than perfection.",
+  "That sounded natural — keep going!",
   "Smooth delivery. One more turn!",
+];
+
+const confidenceMessages = [
+  "You don't need perfect grammar. Just keep speaking — that's how fluency builds.",
+  "Every turn is a rep. You're training your speaking muscle.",
+  "Hesitation is normal. Native speakers pause too.",
+  "Communication first, accuracy second. You're doing great.",
 ];
 
 function Room() {
@@ -74,16 +81,21 @@ function Room() {
   const [showHints, setShowHints] = useState(false);
   const [encouragement, setEncouragement] = useState<string | null>(null);
   const [slowReplay, setSlowReplay] = useState(false);
+  const encIndexRef = useRef(0);
   const transcriptEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     transcriptEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [turns, listening, transcript]);
 
+  const userTurnsCount = turns.filter((t) => t.role === "user").length;
+  const confidenceMsg = confidenceMessages[userTurnsCount % confidenceMessages.length];
+
   const celebrate = () => {
-    const msg = encouragements[Math.floor(Math.random() * encouragements.length)];
+    const msg = encouragements[encIndexRef.current % encouragements.length];
+    encIndexRef.current += 1;
     setEncouragement(msg);
-    setTimeout(() => setEncouragement(null), 2200);
+    setTimeout(() => setEncouragement(null), 2400);
   };
 
   const toggleMic = () => {
@@ -281,8 +293,8 @@ function Room() {
             <div className="text-[11px] uppercase tracking-wider opacity-90 flex items-center gap-1.5">
               <Sparkles className="h-3 w-3" /> Confidence boost
             </div>
-            <p className="text-sm mt-2 font-medium">
-              You don't need perfect grammar. Just keep speaking — that's how fluency builds.
+            <p className="text-sm mt-2 font-medium transition-all" key={confidenceMsg}>
+              {confidenceMsg}
             </p>
           </div>
         </aside>
@@ -448,7 +460,7 @@ function Room() {
                 </IconBtn>
 
                 <div className="relative">
-                  <MicButton active={listening} onClick={toggleMic} />
+                  <MicButton active={listening} processing={aiThinking} onClick={toggleMic} />
                 </div>
 
                 <IconBtn label="Translate" active={translate} onClick={() => setTranslate((v) => !v)}>
