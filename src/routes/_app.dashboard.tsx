@@ -65,13 +65,31 @@ function Dashboard() {
         <div className="absolute -left-10 -bottom-10 h-48 w-48 rounded-full bg-primary/40 blur-3xl" />
 
         <div className="relative p-6 sm:p-8">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 backdrop-blur px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" /> Continue your speaking journey
+              <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" /> Continue your mission
             </span>
+            {current.currentStep && current.totalSteps && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-black/25 backdrop-blur px-2.5 py-1 text-[11px] font-semibold">
+                Step {current.currentStep} of {current.totalSteps}
+              </span>
+            )}
           </div>
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold mt-3 leading-tight">{current.title}</h2>
           <p className="text-sm sm:text-base opacity-90 mt-2 max-w-lg">{current.objective}</p>
+
+          {/* Reward + time chips */}
+          <div className="mt-4 flex items-center gap-2 flex-wrap text-[11px] font-semibold">
+            <span className="inline-flex items-center gap-1 rounded-full bg-accent/90 text-accent-foreground px-2.5 py-1">
+              <Zap className="h-3 w-3" /> +{current.xp} XP
+            </span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/15 backdrop-blur px-2.5 py-1">
+              ≈ {Math.max(2, Math.round(current.minutes * (1 - current.progress / 100)))} min remaining
+            </span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/15 backdrop-blur px-2.5 py-1">
+              {current.category}
+            </span>
+          </div>
 
           <div className="mt-6 max-w-sm">
             <div className="flex items-center justify-between text-xs opacity-90 mb-1.5">
@@ -91,10 +109,17 @@ function Dashboard() {
             <span className="inline-flex items-center gap-2 rounded-2xl bg-white text-secondary px-5 py-3 text-sm font-bold shadow-lg group-hover:scale-[1.03] transition">
               <Mic className="h-4 w-4" /> Continue Mission
             </span>
-            <span className="text-xs opacity-80">≈ {current.minutes} min · Resume where you left off</span>
+            <span className="text-xs opacity-80">Resume where you left off</span>
           </div>
         </div>
       </Link>
+
+      {/* Motivational microcopy strip */}
+      <div className="grid sm:grid-cols-3 gap-2.5 animate-fade-in-up" style={{ animationDelay: "150ms" }}>
+        <MotivationChip icon="🎯" text={`Only ${user.xpToNext - user.xp} XP to Level ${user.level + 1}`} tone="primary" />
+        <MotivationChip icon="🔥" text={`Keep your ${user.streak}-day streak alive`} tone="flame" />
+        <MotivationChip icon="📈" text="You're improving faster than last week" tone="accent" />
+      </div>
 
       {/* Speaking-first quick actions */}
       <div className="grid md:grid-cols-2 gap-4 animate-fade-in-up" style={{ animationDelay: "180ms" }}>
