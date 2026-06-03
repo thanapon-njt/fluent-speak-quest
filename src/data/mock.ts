@@ -62,6 +62,7 @@ export const chapters: Chapter[] = [
     status: "completed",
     progress: 100,
     xp: 120,
+    completedAt: "May 28, 2026",
     objective: "Order drinks, ask about the menu, and chat with baristas confidently.",
     vocabulary: [
       { word: "barista", ipa: "/bəˈriːstə/", meaning: "a person who makes coffee", example: "The barista recommended a flat white." },
@@ -81,6 +82,8 @@ export const chapters: Chapter[] = [
     status: "in-progress",
     progress: 45,
     xp: 180,
+    currentStep: 3,
+    totalSteps: 5,
     objective: "Navigate check-in, security, and boarding with confidence.",
     vocabulary: [
       { word: "boarding pass", ipa: "/ˈbɔːrdɪŋ pæs/", meaning: "ticket to board the plane", example: "May I see your boarding pass?" },
