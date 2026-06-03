@@ -13,6 +13,9 @@ export type Chapter = {
   vocabulary: VocabularyWord[];
   grammar: string[];
   objective: string;
+  completedAt?: string;
+  currentStep?: number;
+  totalSteps?: number;
 };
 
 export type VocabularyWord = {
