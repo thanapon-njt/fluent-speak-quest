@@ -34,6 +34,10 @@ export type Scenario = {
   tutor: { name: string; emoji: string; accent: string };
   objective: string;
   hints: string[];
+  xp?: number;
+  useCase?: string;
+  confidenceTag?: string;
+  featured?: boolean;
 };
 
 export const user = {
