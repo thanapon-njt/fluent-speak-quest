@@ -278,29 +278,63 @@ export const dailyMissions = [
   { id: "m4", title: "Have an AI conversation", progress: 0, total: 1, xp: 60, icon: "💬" },
 ];
 
-export const achievements = [
-  { id: "a1", title: "First Words", desc: "Complete your first lesson", emoji: "🌱", earned: true },
-  { id: "a2", title: "Streak Master", desc: "Maintain a 7-day streak", emoji: "🔥", earned: true },
-  { id: "a3", title: "Chatterbox", desc: "100 minutes of speaking", emoji: "🗣️", earned: true },
-  { id: "a4", title: "Globe Trotter", desc: "Complete all travel chapters", emoji: "🌍", earned: false },
-  { id: "a5", title: "Word Wizard", desc: "Learn 500 words", emoji: "🪄", earned: false },
-  { id: "a6", title: "Fluent Mind", desc: "Reach level 25", emoji: "👑", earned: false },
+export type Rarity = "Common" | "Rare" | "Epic" | "Legendary";
+
+export const achievements: {
+  id: string;
+  title: string;
+  desc: string;
+  emoji: string;
+  earned: boolean;
+  rarity: Rarity;
+  unlockedAt?: string;
+  progress?: { current: number; total: number };
+}[] = [
+  { id: "a1", title: "First Words", desc: "Complete your first lesson", emoji: "🌱", earned: true, rarity: "Common", unlockedAt: "Apr 12, 2026" },
+  { id: "a2", title: "Streak Master", desc: "Maintain a 7-day streak", emoji: "🔥", earned: true, rarity: "Rare", unlockedAt: "May 02, 2026" },
+  { id: "a3", title: "Chatterbox", desc: "100 minutes of speaking", emoji: "🗣️", earned: true, rarity: "Rare", unlockedAt: "May 21, 2026" },
+  { id: "a4", title: "Globe Trotter", desc: "Complete all travel chapters", emoji: "🌍", earned: false, rarity: "Epic", progress: { current: 1, total: 3 } },
+  { id: "a5", title: "Word Wizard", desc: "Learn 500 words", emoji: "🪄", earned: false, rarity: "Epic", progress: { current: 142, total: 500 } },
+  { id: "a6", title: "Fluent Mind", desc: "Reach level 25", emoji: "👑", earned: false, rarity: "Legendary", progress: { current: 12, total: 25 } },
 ];
+
+export type MemoryStrength = "Strong" | "Needs Practice" | "Almost Forgotten";
 
 export const reviewItems = {
   words: [
-    { word: "deadline", meaning: "due date", lastSeen: "2d ago" },
-    { word: "follow up", meaning: "to check back", lastSeen: "3d ago" },
-    { word: "agenda", meaning: "meeting plan", lastSeen: "1d ago" },
+    { word: "deadline", meaning: "due date", lastSeen: "2d ago", strength: "Needs Practice" as MemoryStrength, priority: 2 },
+    { word: "follow up", meaning: "to check back", lastSeen: "3d ago", strength: "Almost Forgotten" as MemoryStrength, priority: 3 },
+    { word: "agenda", meaning: "meeting plan", lastSeen: "1d ago", strength: "Strong" as MemoryStrength, priority: 1 },
   ],
   grammar: [
-    { topic: "Present perfect", desc: "have/has + past participle", lastSeen: "2d ago" },
-    { topic: "Conditional sentences", desc: "If + present, will + verb", lastSeen: "5d ago" },
+    { topic: "Present perfect", desc: "have/has + past participle", lastSeen: "2d ago", strength: "Needs Practice" as MemoryStrength, priority: 2 },
+    { topic: "Conditional sentences", desc: "If + present, will + verb", lastSeen: "5d ago", strength: "Almost Forgotten" as MemoryStrength, priority: 3 },
   ],
   speaking: [
-    { scenario: "Daily Stand-up", score: 72, lastSeen: "yesterday" },
-    { scenario: "Coffee Order", score: 88, lastSeen: "3d ago" },
+    { scenario: "Daily Stand-up", score: 72, lastSeen: "yesterday", strength: "Needs Practice" as MemoryStrength, priority: 2 },
+    { scenario: "Coffee Order", score: 88, lastSeen: "3d ago", strength: "Strong" as MemoryStrength, priority: 1 },
   ],
+};
+
+export const personalBests = [
+  { label: "Longest Streak", value: "42 Days", icon: "🔥" },
+  { label: "Most XP In One Day", value: "850 XP", icon: "⚡" },
+  { label: "Total Speaking Time", value: "18 Hours", icon: "🎤" },
+  { label: "Highest Score", value: "96 / 100", icon: "🎯" },
+];
+
+export const learningJourney = [
+  { id: "j1", title: "Joined Fluent", date: "Apr 10, 2026", emoji: "🌱" },
+  { id: "j2", title: "Completed first conversation", date: "Apr 11, 2026", emoji: "💬" },
+  { id: "j3", title: "Reached Level 5", date: "Apr 28, 2026", emoji: "⭐" },
+  { id: "j4", title: "Completed Coffee Shop chapter", date: "May 28, 2026", emoji: "☕" },
+  { id: "j5", title: "Reached 30-day streak", date: "Jun 01, 2026", emoji: "🔥" },
+];
+
+export const speakingTrend = {
+  weekly: [62, 68, 71, 74, 78, 82, 85],
+  pronunciation: [70, 72, 75, 76, 79, 81, 84],
+  fluency: [58, 62, 66, 70, 73, 76, 80],
 };
 
 export function getChapter(id: string): Chapter | undefined {
