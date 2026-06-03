@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Flame, Zap, Trophy, ArrowRight, Mic, Sparkles, Check, Target, Headphones } from "lucide-react";
-import { user, chapters, dailyMissions } from "@/data/mock";
+import { Flame, Zap, Trophy, ArrowRight, Mic, Sparkles, Check, Target, Headphones, TrendingUp } from "lucide-react";
+import { user, chapters, dailyMissions, speakingTrend } from "@/data/mock";
 
 export const Route = createFileRoute("/_app/dashboard")({
   head: () => ({
