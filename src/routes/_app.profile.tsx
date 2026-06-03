@@ -212,3 +212,19 @@ function StatTile({ label, value, icon: Icon }: { label: string; value: string; 
     </div>
   );
 }
+
+function RarityBadge({ rarity }: { rarity: Rarity }) {
+  const cls =
+    rarity === "Legendary"
+      ? "bg-gradient-to-r from-accent to-flame text-accent-foreground border-accent/50"
+      : rarity === "Epic"
+        ? "bg-primary/15 text-primary border-primary/40"
+        : rarity === "Rare"
+          ? "bg-accent/20 text-accent-foreground border-accent/30"
+          : "bg-muted text-muted-foreground border-border";
+  return (
+    <span className={`text-[9px] font-bold uppercase tracking-[0.12em] border rounded-full px-1.5 py-0.5 ${cls}`}>
+      {rarity}
+    </span>
+  );
+}
