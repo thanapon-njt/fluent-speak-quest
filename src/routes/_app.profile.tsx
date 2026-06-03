@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { user, achievements } from "@/data/mock";
-import { Flame, Zap, Trophy, Clock } from "lucide-react";
+import { user, achievements, personalBests, learningJourney, type Rarity } from "@/data/mock";
+import { Flame, Zap, Trophy, Clock, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/_app/profile")({
   head: () => ({
