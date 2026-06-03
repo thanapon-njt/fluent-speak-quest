@@ -53,6 +53,22 @@ function Profile() {
         <StatTile label="Accuracy" value="86%" icon={Flame} />
       </div>
 
+      {/* Personal Bests */}
+      <section>
+        <h3 className="font-display font-bold text-lg mb-3 flex items-center gap-2">
+          <Trophy className="h-4 w-4 text-accent-foreground" /> Personal bests
+        </h3>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {personalBests.map((p) => (
+            <div key={p.label} className="rounded-2xl bg-card border border-border p-4 shadow-soft hover:border-primary/40 transition">
+              <div className="text-2xl">{p.icon}</div>
+              <div className="font-display text-xl font-bold mt-1">{p.value}</div>
+              <div className="text-[11px] text-muted-foreground uppercase tracking-wide mt-0.5">{p.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Streak heatmap */}
       <section className="rounded-2xl bg-card border border-border p-5 shadow-soft">
         <div className="flex items-center justify-between mb-3">
@@ -99,14 +115,58 @@ function Profile() {
       <section>
         <h3 className="font-display font-bold text-lg mb-3">Achievements</h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {achievements.map((a) => (
-            <div key={a.id} className={`rounded-2xl border p-4 ${a.earned ? "bg-card border-border shadow-soft" : "bg-muted/30 border-dashed opacity-60"}`}>
-              <div className="text-3xl">{a.emoji}</div>
-              <div className="font-semibold text-sm mt-2">{a.title}</div>
-              <div className="text-xs text-muted-foreground mt-0.5">{a.desc}</div>
-              {a.earned && <div className="text-[10px] text-success font-bold mt-2 uppercase tracking-wider">Earned</div>}
-            </div>
-          ))}
+          {achievements.map((a) => {
+            const pct = a.progress ? (a.progress.current / a.progress.total) * 100 : 0;
+            return (
+              <div
+                key={a.id}
+                className={`relative rounded-2xl border p-4 transition ${
+                  a.earned ? "bg-card border-border shadow-soft hover:-translate-y-0.5" : "bg-muted/20 border-dashed"
+                }`}
+              >
+                <div className="flex items-start justify-between">
+                  <div className={`text-3xl ${a.earned ? "" : "grayscale opacity-60"}`}>{a.emoji}</div>
+                  <RarityBadge rarity={a.rarity} />
+                </div>
+                <div className="font-semibold text-sm mt-2">{a.title}</div>
+                <div className="text-xs text-muted-foreground mt-0.5">{a.desc}</div>
+                {a.earned ? (
+                  <div className="text-[10px] text-success font-bold mt-2 uppercase tracking-wider">
+                    Earned · {a.unlockedAt}
+                  </div>
+                ) : a.progress ? (
+                  <div className="mt-2">
+                    <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                      <div className="h-full bg-gradient-primary rounded-full" style={{ width: `${pct}%` }} />
+                    </div>
+                    <div className="text-[10px] text-muted-foreground mt-1 tabular-nums">
+                      {a.progress.current} / {a.progress.total}
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Learning Journey */}
+      <section>
+        <h3 className="font-display font-bold text-lg mb-3 flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-primary" /> Your learning journey
+        </h3>
+        <div className="rounded-2xl bg-card border border-border p-5 shadow-soft">
+          <ol className="relative border-l border-border/70 ml-3 space-y-5">
+            {learningJourney.map((m) => (
+              <li key={m.id} className="pl-5 relative">
+                <span className="absolute -left-[11px] top-0 h-5 w-5 rounded-full bg-gradient-primary grid place-items-center text-[10px] shadow-glow">
+                  {m.emoji}
+                </span>
+                <div className="font-semibold text-sm">{m.title}</div>
+                <div className="text-xs text-muted-foreground">{m.date}</div>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
