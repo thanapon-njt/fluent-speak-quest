@@ -107,13 +107,23 @@ function MapPage() {
                             </div>
                           </>
                         )}
+                        {completed && c.completedAt && (
+                          <div className={`mt-3 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-success ${side === "right" ? "ml-auto" : ""}`}>
+                            <Check className="h-3 w-3" /> Completed · {c.completedAt}
+                          </div>
+                        )}
                       </Link>
                     </div>
 
                     {/* Node */}
                     <div className="relative shrink-0">
                       {active && (
-                        <span className="absolute inset-0 rounded-full bg-primary/30 animate-mic-pulse" />
+                        <>
+                          <span className="absolute inset-0 rounded-full bg-primary/30 animate-mic-pulse" />
+                          <span className="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] font-bold uppercase tracking-wider bg-primary text-primary-foreground rounded-full px-2 py-0.5 shadow-glow">
+                            You are here
+                          </span>
+                        </>
                       )}
                       <div className={`relative h-16 w-16 sm:h-18 sm:w-18 rounded-full grid place-items-center text-2xl shadow-card border-4 transition-transform ${
                         completed
@@ -126,6 +136,11 @@ function MapPage() {
                       }`}>
                         {locked ? <Lock className="h-5 w-5" /> : completed ? <Check className="h-6 w-6" strokeWidth={3} /> : c.emoji}
                       </div>
+                      {completed && (
+                        <span className="absolute -bottom-1 -right-1 text-base bg-card border-2 border-success/40 rounded-full h-7 w-7 grid place-items-center shadow-soft" title="Badge earned">
+                          🏆
+                        </span>
+                      )}
                       {!locked && !completed && !active && (
                         <span className="absolute -top-1 -right-1 text-[9px] font-bold bg-accent text-accent-foreground rounded-full px-1.5 py-0.5">NEW</span>
                       )}

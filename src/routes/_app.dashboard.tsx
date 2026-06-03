@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Flame, Zap, Trophy, ArrowRight, Mic, Sparkles, Check, Target, Headphones } from "lucide-react";
-import { user, chapters, dailyMissions } from "@/data/mock";
+import { Flame, Zap, Trophy, ArrowRight, Mic, Sparkles, Check, Target, Headphones, TrendingUp } from "lucide-react";
+import { user, chapters, dailyMissions, speakingTrend } from "@/data/mock";
 
 export const Route = createFileRoute("/_app/dashboard")({
   head: () => ({
@@ -65,13 +65,31 @@ function Dashboard() {
         <div className="absolute -left-10 -bottom-10 h-48 w-48 rounded-full bg-primary/40 blur-3xl" />
 
         <div className="relative p-6 sm:p-8">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 backdrop-blur px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" /> Continue your speaking journey
+              <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" /> Continue your mission
             </span>
+            {current.currentStep && current.totalSteps && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-black/25 backdrop-blur px-2.5 py-1 text-[11px] font-semibold">
+                Step {current.currentStep} of {current.totalSteps}
+              </span>
+            )}
           </div>
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold mt-3 leading-tight">{current.title}</h2>
           <p className="text-sm sm:text-base opacity-90 mt-2 max-w-lg">{current.objective}</p>
+
+          {/* Reward + time chips */}
+          <div className="mt-4 flex items-center gap-2 flex-wrap text-[11px] font-semibold">
+            <span className="inline-flex items-center gap-1 rounded-full bg-accent/90 text-accent-foreground px-2.5 py-1">
+              <Zap className="h-3 w-3" /> +{current.xp} XP
+            </span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/15 backdrop-blur px-2.5 py-1">
+              ≈ {Math.max(2, Math.round(current.minutes * (1 - current.progress / 100)))} min remaining
+            </span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/15 backdrop-blur px-2.5 py-1">
+              {current.category}
+            </span>
+          </div>
 
           <div className="mt-6 max-w-sm">
             <div className="flex items-center justify-between text-xs opacity-90 mb-1.5">
@@ -91,10 +109,17 @@ function Dashboard() {
             <span className="inline-flex items-center gap-2 rounded-2xl bg-white text-secondary px-5 py-3 text-sm font-bold shadow-lg group-hover:scale-[1.03] transition">
               <Mic className="h-4 w-4" /> Continue Mission
             </span>
-            <span className="text-xs opacity-80">≈ {current.minutes} min · Resume where you left off</span>
+            <span className="text-xs opacity-80">Resume where you left off</span>
           </div>
         </div>
       </Link>
+
+      {/* Motivational microcopy strip */}
+      <div className="grid sm:grid-cols-3 gap-2.5 animate-fade-in-up" style={{ animationDelay: "150ms" }}>
+        <MotivationChip icon="🎯" text={`Only ${user.xpToNext - user.xp} XP to Level ${user.level + 1}`} tone="primary" />
+        <MotivationChip icon="🔥" text={`Keep your ${user.streak}-day streak alive`} tone="flame" />
+        <MotivationChip icon="📈" text="You're improving faster than last week" tone="accent" />
+      </div>
 
       {/* Speaking-first quick actions */}
       <div className="grid md:grid-cols-2 gap-4 animate-fade-in-up" style={{ animationDelay: "180ms" }}>
@@ -134,8 +159,27 @@ function Dashboard() {
         </Link>
       </div>
 
+      {/* Speaking Progress */}
+      <section className="rounded-3xl bg-card border border-border p-5 shadow-soft animate-fade-in-up" style={{ animationDelay: "200ms" }}>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <div className="text-xs uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+              <TrendingUp className="h-3.5 w-3.5 text-primary" /> Speaking progress · last 7 days
+            </div>
+            <div className="font-display font-bold text-lg mt-0.5">You're getting more fluent</div>
+          </div>
+          <span className="text-[11px] font-bold px-2 py-1 rounded-full bg-success/15 text-success">+8% this week</span>
+        </div>
+        <div className="grid sm:grid-cols-3 gap-3">
+          <TrendCard label="Overall" data={speakingTrend.weekly} accent="primary" />
+          <TrendCard label="Pronunciation" data={speakingTrend.pronunciation} accent="accent" />
+          <TrendCard label="Fluency" data={speakingTrend.fluency} accent="success" />
+        </div>
+      </section>
+
       {/* Daily Goal + Daily Missions */}
       <section className="grid lg:grid-cols-[1fr_2fr] gap-4">
+
         {/* Daily goal ring */}
         <div className="rounded-3xl bg-card border border-border p-5 shadow-soft">
           <div className="flex items-center justify-between">
@@ -291,6 +335,53 @@ function DailyRing({ pct }: { pct: number }) {
         <div className="text-center">
           <div className="font-display text-xl font-bold">{pct}%</div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function MotivationChip({ icon, text, tone }: { icon: string; text: string; tone: "primary" | "flame" | "accent" }) {
+  const toneClass =
+    tone === "flame"
+      ? "border-flame/30 bg-flame/10 text-flame-foreground"
+      : tone === "accent"
+        ? "border-accent/40 bg-accent/15 text-accent-foreground"
+        : "border-primary/30 bg-primary/10 text-primary";
+  return (
+    <div className={`flex items-center gap-2 rounded-2xl border px-3 py-2.5 text-xs font-semibold ${toneClass}`}>
+      <span className="text-base leading-none">{icon}</span>
+      <span className="leading-snug">{text}</span>
+    </div>
+  );
+}
+
+function TrendCard({ label, data, accent }: { label: string; data: number[]; accent: "primary" | "accent" | "success" }) {
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const range = Math.max(1, max - min);
+  const w = 100;
+  const h = 32;
+  const step = w / (data.length - 1);
+  const points = data.map((v, i) => `${i * step},${h - ((v - min) / range) * h}`).join(" ");
+  const stroke =
+    accent === "accent" ? "var(--color-accent)" : accent === "success" ? "var(--color-success)" : "var(--color-primary)";
+  const last = data[data.length - 1];
+  const first = data[0];
+  const delta = last - first;
+  return (
+    <div className="rounded-2xl border border-border bg-background p-3">
+      <div className="flex items-center justify-between">
+        <div className="text-[11px] uppercase tracking-wider text-muted-foreground">{label}</div>
+        <div className={`text-[10px] font-bold ${delta >= 0 ? "text-success" : "text-destructive"}`}>
+          {delta >= 0 ? "+" : ""}{delta}
+        </div>
+      </div>
+      <div className="mt-2 flex items-end justify-between gap-2">
+        <div className="font-display font-bold text-xl tabular-nums">{last}</div>
+        <svg viewBox={`0 0 ${w} ${h}`} className="h-8 w-24 overflow-visible">
+          <polyline fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" points={points} />
+          <circle cx={(data.length - 1) * step} cy={h - ((last - min) / range) * h} r="2.5" fill={stroke} />
+        </svg>
       </div>
     </div>
   );
