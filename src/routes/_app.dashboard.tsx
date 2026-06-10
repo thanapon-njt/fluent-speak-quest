@@ -272,46 +272,15 @@ function DailyRing({ pct }: { pct: number }) {
 function MotivationChip({ icon, text, tone }: { icon: string; text: string; tone: "primary" | "flame" | "accent" }) {
   const toneClass =
     tone === "flame"
-      ? "border-flame/30 bg-flame/10 text-flame-foreground"
+      ? "border-flame/40 bg-flame/15 text-flame"
       : tone === "accent"
-        ? "border-accent/40 bg-accent/15 text-accent-foreground"
-        : "border-primary/30 bg-primary/10 text-primary";
+        ? "border-accent/50 bg-accent/20 text-accent-foreground"
+        : "border-primary/40 bg-primary/15 text-primary";
   return (
-    <div className={`flex items-center gap-2 rounded-2xl border px-3 py-2.5 text-xs font-semibold ${toneClass}`}>
+    <div className={`flex items-center gap-2 rounded-2xl border px-3 py-2.5 text-sm font-semibold ${toneClass}`}>
       <span className="text-base leading-none">{icon}</span>
       <span className="leading-snug">{text}</span>
     </div>
   );
 }
 
-function TrendCard({ label, data, accent }: { label: string; data: number[]; accent: "primary" | "accent" | "success" }) {
-  const max = Math.max(...data);
-  const min = Math.min(...data);
-  const range = Math.max(1, max - min);
-  const w = 100;
-  const h = 32;
-  const step = w / (data.length - 1);
-  const points = data.map((v, i) => `${i * step},${h - ((v - min) / range) * h}`).join(" ");
-  const stroke =
-    accent === "accent" ? "var(--color-accent)" : accent === "success" ? "var(--color-success)" : "var(--color-primary)";
-  const last = data[data.length - 1];
-  const first = data[0];
-  const delta = last - first;
-  return (
-    <div className="rounded-2xl border border-border bg-background p-3">
-      <div className="flex items-center justify-between">
-        <div className="text-[11px] uppercase tracking-wider text-muted-foreground">{label}</div>
-        <div className={`text-[10px] font-bold ${delta >= 0 ? "text-success" : "text-destructive"}`}>
-          {delta >= 0 ? "+" : ""}{delta}
-        </div>
-      </div>
-      <div className="mt-2 flex items-end justify-between gap-2">
-        <div className="font-display font-bold text-xl tabular-nums">{last}</div>
-        <svg viewBox={`0 0 ${w} ${h}`} className="h-8 w-24 overflow-visible">
-          <polyline fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" points={points} />
-          <circle cx={(data.length - 1) * step} cy={h - ((last - min) / range) * h} r="2.5" fill={stroke} />
-        </svg>
-      </div>
-    </div>
-  );
-}
