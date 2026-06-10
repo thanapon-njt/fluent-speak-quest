@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Flame, Zap, Trophy, ArrowRight, Mic, Sparkles, Check, Target, Headphones, TrendingUp } from "lucide-react";
-import { user, chapters, dailyMissions, speakingTrend } from "@/data/mock";
+import { Zap, ArrowRight, Mic, Sparkles, Check, Target, Headphones } from "lucide-react";
+import { user, chapters, dailyMissions } from "@/data/mock";
 
 export const Route = createFileRoute("/_app/dashboard")({
   head: () => ({
@@ -30,27 +30,6 @@ function Dashboard() {
         <p className="text-sm text-muted-foreground mt-1.5">
           You're <span className="text-primary font-semibold">{xpPct}%</span> closer to confident speaking — keep going.
         </p>
-      </div>
-
-      {/* Gamified stat strip */}
-      <div className="grid grid-cols-3 gap-3 animate-fade-in-up" style={{ animationDelay: "60ms" }}>
-        <StatPill
-          icon={<Flame className="h-5 w-5 text-flame-foreground animate-flame" />}
-          value={`${user.streak}`}
-          label="Day streak"
-          gradient="bg-gradient-flame"
-          textOnGradient
-        />
-        <StatPill
-          icon={<Zap className="h-5 w-5" />}
-          value={user.xp.toLocaleString()}
-          label="Total XP"
-        />
-        <StatPill
-          icon={<Trophy className="h-5 w-5 text-primary" />}
-          value={`Lv ${user.level}`}
-          label={`${user.xpToNext - user.xp} XP to next`}
-        />
       </div>
 
       {/* HERO — Continue Your Journey */}
@@ -159,23 +138,6 @@ function Dashboard() {
         </Link>
       </div>
 
-      {/* Speaking Progress */}
-      <section className="rounded-3xl bg-card border border-border p-5 shadow-soft animate-fade-in-up" style={{ animationDelay: "200ms" }}>
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <div className="text-xs uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <TrendingUp className="h-3.5 w-3.5 text-primary" /> Speaking progress · last 7 days
-            </div>
-            <div className="font-display font-bold text-lg mt-0.5">You're getting more fluent</div>
-          </div>
-          <span className="text-[11px] font-bold px-2 py-1 rounded-full bg-success/15 text-success">+8% this week</span>
-        </div>
-        <div className="grid sm:grid-cols-3 gap-3">
-          <TrendCard label="Overall" data={speakingTrend.weekly} accent="primary" />
-          <TrendCard label="Pronunciation" data={speakingTrend.pronunciation} accent="accent" />
-          <TrendCard label="Fluency" data={speakingTrend.fluency} accent="success" />
-        </div>
-      </section>
 
       {/* Daily Goal + Daily Missions */}
       <section className="grid lg:grid-cols-[1fr_2fr] gap-4">
@@ -281,39 +243,6 @@ function Dashboard() {
   );
 }
 
-function StatPill({
-  icon,
-  value,
-  label,
-  gradient,
-  textOnGradient,
-}: {
-  icon: React.ReactNode;
-  value: string;
-  label: string;
-  gradient?: string;
-  textOnGradient?: boolean;
-}) {
-  return (
-    <div
-      className={`rounded-2xl px-3 py-3 sm:px-4 sm:py-3.5 flex items-center gap-2.5 shadow-soft ${
-        gradient ? `${gradient} text-white shadow-flame` : "bg-card border border-border"
-      }`}
-    >
-      <div className={`h-9 w-9 rounded-xl grid place-items-center shrink-0 ${
-        gradient ? "bg-white/20" : "bg-muted"
-      }`}>
-        {icon}
-      </div>
-      <div className="min-w-0">
-        <div className={`font-display font-bold leading-none text-lg sm:text-xl ${textOnGradient ? "" : ""}`}>{value}</div>
-        <div className={`text-[10px] sm:text-[11px] uppercase tracking-wide mt-1 truncate ${
-          gradient ? "opacity-90" : "text-muted-foreground"
-        }`}>{label}</div>
-      </div>
-    </div>
-  );
-}
 
 function DailyRing({ pct }: { pct: number }) {
   const size = 96;
@@ -343,46 +272,15 @@ function DailyRing({ pct }: { pct: number }) {
 function MotivationChip({ icon, text, tone }: { icon: string; text: string; tone: "primary" | "flame" | "accent" }) {
   const toneClass =
     tone === "flame"
-      ? "border-flame/30 bg-flame/10 text-flame-foreground"
+      ? "border-flame/40 bg-flame/15 text-flame"
       : tone === "accent"
-        ? "border-accent/40 bg-accent/15 text-accent-foreground"
-        : "border-primary/30 bg-primary/10 text-primary";
+        ? "border-accent/50 bg-accent/20 text-accent-foreground"
+        : "border-primary/40 bg-primary/15 text-primary";
   return (
-    <div className={`flex items-center gap-2 rounded-2xl border px-3 py-2.5 text-xs font-semibold ${toneClass}`}>
+    <div className={`flex items-center gap-2 rounded-2xl border px-3 py-2.5 text-sm font-semibold ${toneClass}`}>
       <span className="text-base leading-none">{icon}</span>
       <span className="leading-snug">{text}</span>
     </div>
   );
 }
 
-function TrendCard({ label, data, accent }: { label: string; data: number[]; accent: "primary" | "accent" | "success" }) {
-  const max = Math.max(...data);
-  const min = Math.min(...data);
-  const range = Math.max(1, max - min);
-  const w = 100;
-  const h = 32;
-  const step = w / (data.length - 1);
-  const points = data.map((v, i) => `${i * step},${h - ((v - min) / range) * h}`).join(" ");
-  const stroke =
-    accent === "accent" ? "var(--color-accent)" : accent === "success" ? "var(--color-success)" : "var(--color-primary)";
-  const last = data[data.length - 1];
-  const first = data[0];
-  const delta = last - first;
-  return (
-    <div className="rounded-2xl border border-border bg-background p-3">
-      <div className="flex items-center justify-between">
-        <div className="text-[11px] uppercase tracking-wider text-muted-foreground">{label}</div>
-        <div className={`text-[10px] font-bold ${delta >= 0 ? "text-success" : "text-destructive"}`}>
-          {delta >= 0 ? "+" : ""}{delta}
-        </div>
-      </div>
-      <div className="mt-2 flex items-end justify-between gap-2">
-        <div className="font-display font-bold text-xl tabular-nums">{last}</div>
-        <svg viewBox={`0 0 ${w} ${h}`} className="h-8 w-24 overflow-visible">
-          <polyline fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" points={points} />
-          <circle cx={(data.length - 1) * step} cy={h - ((last - min) / range) * h} r="2.5" fill={stroke} />
-        </svg>
-      </div>
-    </div>
-  );
-}
