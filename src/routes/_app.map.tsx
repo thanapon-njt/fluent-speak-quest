@@ -106,9 +106,8 @@ function MapPage() {
 
         <div className="relative">
           {/* Path line — dashed RPG trail */}
-          <svg className="absolute left-1/2 top-0 -translate-x-1/2 h-full w-2 -z-10" preserveAspectRatio="none">
-            <line x1="1" y1="0" x2="1" y2="100%" stroke="var(--color-border)" strokeWidth="2" strokeDasharray="6 8" />
-          </svg>
+          {/* Path line removed — cards now span full width */}
+
 
           <ol className="space-y-10">
             {chapters.map((c, i) => {
