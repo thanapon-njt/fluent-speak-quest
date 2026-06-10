@@ -129,58 +129,6 @@ function MapPage() {
                     </div>
                   )}
                   <div className={`flex items-center gap-3 sm:gap-4 ${side === "right" ? "flex-row-reverse" : ""}`}>
-                    {/* Card */}
-                    <div className="flex-1">
-                      <Link
-                        to="/chapters/$chapterId"
-                        params={{ chapterId: c.id }}
-                        aria-disabled={locked}
-                        className={`block group rounded-2xl border bg-card p-4 transition-all ${
-                          locked
-                            ? "opacity-50 pointer-events-none border-dashed"
-                            : active
-                              ? "border-primary/40 shadow-glow ring-2 ring-primary/20"
-                              : "shadow-soft hover:border-primary/40 hover:shadow-card hover:-translate-y-0.5"
-                        } ${side === "right" ? "text-right" : ""}`}
-                      >
-                        <div className={`flex items-center gap-2 ${side === "right" ? "justify-end" : ""}`}>
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-bold uppercase tracking-wide">
-                            {c.category}
-                          </span>
-                          <span className="flex items-center gap-0.5">
-                            {[1, 2, 3].map((d) => (
-                              <Star
-                                key={d}
-                                className={`h-3 w-3 ${d <= c.difficulty ? "fill-accent text-accent" : "text-muted-foreground/30"}`}
-                              />
-                            ))}
-                          </span>
-                        </div>
-                        <h3 className="font-display font-bold text-base sm:text-lg mt-2 leading-tight">{c.title}</h3>
-                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{c.objective || "Coming soon."}</p>
-                        <div className={`flex items-center gap-3 mt-3 text-[11px] text-muted-foreground ${side === "right" ? "justify-end" : ""}`}>
-                          <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{c.minutes} min</span>
-                          <span className="font-bold text-accent-foreground">+{c.xp} XP</span>
-                        </div>
-                        {active && (
-                          <>
-                            <div className="mt-3 h-1.5 bg-muted rounded-full overflow-hidden relative">
-                              <div className="h-full bg-gradient-primary" style={{ width: `${c.progress}%` }} />
-                              <div className="absolute inset-0 animate-glow-sweep bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-                            </div>
-                            <div className={`mt-2 text-[11px] font-bold text-primary inline-flex items-center gap-1 ${side === "right" ? "ml-auto" : ""}`}>
-                              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" /> Continue mission
-                            </div>
-                          </>
-                        )}
-                        {completed && c.completedAt && (
-                          <div className={`mt-3 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-success ${side === "right" ? "ml-auto" : ""}`}>
-                            <Check className="h-3 w-3" /> Completed · {c.completedAt}
-                          </div>
-                        )}
-                      </Link>
-                    </div>
-
                     {/* Node */}
                     <div className="relative shrink-0">
                       {active && (
@@ -212,8 +160,59 @@ function MapPage() {
                       )}
                     </div>
 
-                    <div className="flex-1" />
+                    {/* Card — full width */}
+                    <div className="flex-1 min-w-0">
+                      <Link
+                        to="/chapters/$chapterId"
+                        params={{ chapterId: c.id }}
+                        aria-disabled={locked}
+                        className={`block group rounded-2xl border bg-card p-4 transition-all ${
+                          locked
+                            ? "opacity-50 pointer-events-none border-dashed"
+                            : active
+                              ? "border-primary/40 shadow-glow ring-2 ring-primary/20"
+                              : "shadow-soft hover:border-primary/40 hover:shadow-card hover:-translate-y-0.5"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-bold uppercase tracking-wide">
+                            {c.category}
+                          </span>
+                          <span className="flex items-center gap-0.5">
+                            {[1, 2, 3].map((d) => (
+                              <Star
+                                key={d}
+                                className={`h-3 w-3 ${d <= c.difficulty ? "fill-accent text-accent" : "text-muted-foreground/30"}`}
+                              />
+                            ))}
+                          </span>
+                          <span className="ml-auto flex items-center gap-3 text-[11px] text-muted-foreground">
+                            <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{c.minutes} min</span>
+                            <span className="font-bold text-accent-foreground">+{c.xp} XP</span>
+                          </span>
+                        </div>
+                        <h3 className="font-display font-bold text-base sm:text-lg mt-2 leading-tight">{c.title}</h3>
+                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{c.objective || "Coming soon."}</p>
+                        {active && (
+                          <>
+                            <div className="mt-3 h-1.5 bg-muted rounded-full overflow-hidden relative">
+                              <div className="h-full bg-gradient-primary" style={{ width: `${c.progress}%` }} />
+                              <div className="absolute inset-0 animate-glow-sweep bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+                            </div>
+                            <div className="mt-2 text-[11px] font-bold text-primary inline-flex items-center gap-1">
+                              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" /> Continue mission
+                            </div>
+                          </>
+                        )}
+                        {completed && c.completedAt && (
+                          <div className="mt-3 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-success">
+                            <Check className="h-3 w-3" /> Completed · {c.completedAt}
+                          </div>
+                        )}
+                      </Link>
+                    </div>
                   </div>
+
                 </li>
               );
             })}
