@@ -243,39 +243,6 @@ function Dashboard() {
   );
 }
 
-function StatPill({
-  icon,
-  value,
-  label,
-  gradient,
-  textOnGradient,
-}: {
-  icon: React.ReactNode;
-  value: string;
-  label: string;
-  gradient?: string;
-  textOnGradient?: boolean;
-}) {
-  return (
-    <div
-      className={`rounded-2xl px-3 py-3 sm:px-4 sm:py-3.5 flex items-center gap-2.5 shadow-soft ${
-        gradient ? `${gradient} text-white shadow-flame` : "bg-card border border-border"
-      }`}
-    >
-      <div className={`h-9 w-9 rounded-xl grid place-items-center shrink-0 ${
-        gradient ? "bg-white/20" : "bg-muted"
-      }`}>
-        {icon}
-      </div>
-      <div className="min-w-0">
-        <div className={`font-display font-bold leading-none text-lg sm:text-xl ${textOnGradient ? "" : ""}`}>{value}</div>
-        <div className={`text-[10px] sm:text-[11px] uppercase tracking-wide mt-1 truncate ${
-          gradient ? "opacity-90" : "text-muted-foreground"
-        }`}>{label}</div>
-      </div>
-    </div>
-  );
-}
 
 function DailyRing({ pct }: { pct: number }) {
   const size = 96;
