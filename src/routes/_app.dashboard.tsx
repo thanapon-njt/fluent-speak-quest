@@ -32,27 +32,6 @@ function Dashboard() {
         </p>
       </div>
 
-      {/* Gamified stat strip */}
-      <div className="grid grid-cols-3 gap-3 animate-fade-in-up" style={{ animationDelay: "60ms" }}>
-        <StatPill
-          icon={<Flame className="h-5 w-5 text-flame-foreground animate-flame" />}
-          value={`${user.streak}`}
-          label="Day streak"
-          gradient="bg-gradient-flame"
-          textOnGradient
-        />
-        <StatPill
-          icon={<Zap className="h-5 w-5" />}
-          value={user.xp.toLocaleString()}
-          label="Total XP"
-        />
-        <StatPill
-          icon={<Trophy className="h-5 w-5 text-primary" />}
-          value={`Lv ${user.level}`}
-          label={`${user.xpToNext - user.xp} XP to next`}
-        />
-      </div>
-
       {/* HERO — Continue Your Journey */}
       <Link
         to="/chapters/$chapterId"
