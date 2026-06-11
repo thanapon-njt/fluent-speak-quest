@@ -263,18 +263,4 @@ function DailyRing({ pct }: { pct: number }) {
   );
 }
 
-function MotivationChip({ icon, text, tone }: { icon: string; text: string; tone: "primary" | "flame" | "accent" }) {
-  const toneClass =
-    tone === "flame"
-      ? "border-flame/40 bg-flame/15 text-flame"
-      : tone === "accent"
-        ? "border-accent/50 bg-accent/20 text-accent-foreground"
-        : "border-primary/40 bg-primary/15 text-primary";
-  return (
-    <div className={`flex items-center gap-2 rounded-2xl border px-3 py-2.5 text-sm font-semibold ${toneClass}`}>
-      <span className="text-base leading-none">{icon}</span>
-      <span className="leading-snug">{text}</span>
-    </div>
-  );
-}
 
