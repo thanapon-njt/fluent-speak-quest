@@ -185,29 +185,11 @@ function Dashboard() {
         </div>
       </section>
 
-      {/* Speaking-first quick actions */}
-      <div className="grid md:grid-cols-2 gap-4 animate-fade-in-up" style={{ animationDelay: "180ms" }}>
-        <Link
-          to="/conversations"
-          className="group relative overflow-hidden rounded-3xl bg-secondary text-secondary-foreground p-5 sm:p-6 shadow-card hover:-translate-y-0.5 transition"
-        >
-          <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-gradient-primary opacity-30 blur-2xl" />
-          <div className="relative flex items-center gap-4">
-            <div className="h-14 w-14 rounded-2xl bg-gradient-primary grid place-items-center shadow-glow shrink-0">
-              <Mic className="h-6 w-6 text-primary-foreground" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-[11px] uppercase tracking-wider opacity-70">Speak now</div>
-              <div className="font-display text-lg sm:text-xl font-bold mt-0.5">Practice a real conversation</div>
-              <div className="text-xs opacity-80 mt-1">AI tutor · 5–15 min · instant feedback</div>
-            </div>
-            <ArrowRight className="h-5 w-5 opacity-70 group-hover:translate-x-1 transition shrink-0" />
-          </div>
-        </Link>
-
+      {/* Smart review */}
+      <div className="animate-fade-in-up" style={{ animationDelay: "180ms" }}>
         <Link
           to="/review"
-          className="group rounded-3xl bg-card border border-border p-5 sm:p-6 shadow-soft hover:border-primary/40 hover:-translate-y-0.5 transition"
+          className="group block rounded-3xl bg-card border border-border p-4 sm:p-5 shadow-soft hover:border-primary/40 hover:-translate-y-0.5 transition"
         >
           <div className="flex items-center gap-4">
             <div className="h-14 w-14 rounded-2xl bg-accent/30 grid place-items-center shrink-0">
@@ -222,6 +204,7 @@ function Dashboard() {
           </div>
         </Link>
       </div>
+
 
 
       {/* Level progress bar — slim, focused */}
