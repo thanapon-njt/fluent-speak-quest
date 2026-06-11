@@ -21,16 +21,29 @@ function Dashboard() {
 
   return (
     <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-10 space-y-6">
-      {/* Greeting + motivational micro */}
-      <div className="animate-fade-in-up">
-        <p className="text-sm text-muted-foreground">Welcome back, {user.name.split(" ")[0]} 👋</p>
-        <h1 className="font-display text-2xl sm:text-3xl font-bold mt-1">
-          Ready for today's challenge?
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1.5">
-          You're <span className="text-primary font-semibold">{xpPct}%</span> closer to confident speaking — keep going.
+      {/* Greeting */}
+      <div className="animate-fade-in-up flex items-center gap-3 sm:gap-4">
+        <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-gradient-primary grid place-items-center text-primary-foreground font-display text-lg font-bold shadow-glow shrink-0">
+          {user.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-xs sm:text-sm text-muted-foreground">
+            Welcome back, <span className="font-semibold text-foreground">{user.name.split(" ")[0]}</span> 👋
+          </p>
+          <h1 className="font-display text-xl sm:text-3xl font-extrabold leading-tight mt-0.5">
+            Ready for today's challenge?
+          </h1>
+        </div>
+      </div>
+
+      {/* Progress whisper */}
+      <div className="animate-fade-in-up rounded-2xl border border-primary/20 bg-primary/5 px-4 py-3 flex items-center gap-3" style={{ animationDelay: "60ms" }}>
+        <Sparkles className="h-4 w-4 text-primary shrink-0" />
+        <p className="text-sm leading-snug">
+          You're <span className="text-primary font-bold">{xpPct}%</span> closer to confident speaking — keep going.
         </p>
       </div>
+
 
       {/* HERO — Continue Your Journey */}
       <Link
