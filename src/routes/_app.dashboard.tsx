@@ -21,16 +21,29 @@ function Dashboard() {
 
   return (
     <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-10 space-y-6">
-      {/* Greeting + motivational micro */}
-      <div className="animate-fade-in-up">
-        <p className="text-sm text-muted-foreground">Welcome back, {user.name.split(" ")[0]} 👋</p>
-        <h1 className="font-display text-2xl sm:text-3xl font-bold mt-1">
-          Ready for today's challenge?
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1.5">
-          You're <span className="text-primary font-semibold">{xpPct}%</span> closer to confident speaking — keep going.
+      {/* Greeting */}
+      <div className="animate-fade-in-up flex items-center gap-3 sm:gap-4">
+        <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-gradient-primary grid place-items-center text-primary-foreground font-display text-lg font-bold shadow-glow shrink-0">
+          {user.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-xs sm:text-sm text-muted-foreground">
+            Welcome back, <span className="font-semibold text-foreground">{user.name.split(" ")[0]}</span> 👋
+          </p>
+          <h1 className="font-display text-xl sm:text-3xl font-extrabold leading-tight mt-0.5">
+            Ready for today's challenge?
+          </h1>
+        </div>
+      </div>
+
+      {/* Progress whisper */}
+      <div className="animate-fade-in-up rounded-2xl border border-primary/20 bg-primary/5 px-4 py-3 flex items-center gap-3" style={{ animationDelay: "60ms" }}>
+        <Sparkles className="h-4 w-4 text-primary shrink-0" />
+        <p className="text-sm leading-snug">
+          You're <span className="text-primary font-bold">{xpPct}%</span> closer to confident speaking — keep going.
         </p>
       </div>
+
 
       {/* HERO — Continue Your Journey */}
       <Link
@@ -172,29 +185,11 @@ function Dashboard() {
         </div>
       </section>
 
-      {/* Speaking-first quick actions */}
-      <div className="grid md:grid-cols-2 gap-4 animate-fade-in-up" style={{ animationDelay: "180ms" }}>
-        <Link
-          to="/conversations"
-          className="group relative overflow-hidden rounded-3xl bg-secondary text-secondary-foreground p-5 sm:p-6 shadow-card hover:-translate-y-0.5 transition"
-        >
-          <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-gradient-primary opacity-30 blur-2xl" />
-          <div className="relative flex items-center gap-4">
-            <div className="h-14 w-14 rounded-2xl bg-gradient-primary grid place-items-center shadow-glow shrink-0">
-              <Mic className="h-6 w-6 text-primary-foreground" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-[11px] uppercase tracking-wider opacity-70">Speak now</div>
-              <div className="font-display text-lg sm:text-xl font-bold mt-0.5">Practice a real conversation</div>
-              <div className="text-xs opacity-80 mt-1">AI tutor · 5–15 min · instant feedback</div>
-            </div>
-            <ArrowRight className="h-5 w-5 opacity-70 group-hover:translate-x-1 transition shrink-0" />
-          </div>
-        </Link>
-
+      {/* Smart review */}
+      <div className="animate-fade-in-up" style={{ animationDelay: "180ms" }}>
         <Link
           to="/review"
-          className="group rounded-3xl bg-card border border-border p-5 sm:p-6 shadow-soft hover:border-primary/40 hover:-translate-y-0.5 transition"
+          className="group block rounded-3xl bg-card border border-border p-4 sm:p-5 shadow-soft hover:border-primary/40 hover:-translate-y-0.5 transition"
         >
           <div className="flex items-center gap-4">
             <div className="h-14 w-14 rounded-2xl bg-accent/30 grid place-items-center shrink-0">
@@ -209,6 +204,7 @@ function Dashboard() {
           </div>
         </Link>
       </div>
+
 
 
       {/* Level progress bar — slim, focused */}
