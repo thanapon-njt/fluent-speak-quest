@@ -94,62 +94,23 @@ function Dashboard() {
       </Link>
 
 
-      {/* Speaking-first quick actions */}
-      <div className="grid md:grid-cols-2 gap-4 animate-fade-in-up" style={{ animationDelay: "180ms" }}>
-        <Link
-          to="/conversations"
-          className="group relative overflow-hidden rounded-3xl bg-secondary text-secondary-foreground p-6 shadow-card hover:-translate-y-0.5 transition"
-        >
-          <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-gradient-primary opacity-30 blur-2xl" />
-          <div className="relative flex items-center gap-4">
-            <div className="h-14 w-14 rounded-2xl bg-gradient-primary grid place-items-center shadow-glow shrink-0">
-              <Mic className="h-6 w-6 text-primary-foreground" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-[11px] uppercase tracking-wider opacity-70">Speak now</div>
-              <div className="font-display text-xl font-bold mt-0.5">Practice a real conversation</div>
-              <div className="text-xs opacity-80 mt-1">AI tutor · 5–15 min · instant feedback</div>
-            </div>
-            <ArrowRight className="h-5 w-5 opacity-70 group-hover:translate-x-1 transition" />
-          </div>
-        </Link>
-
-        <Link
-          to="/review"
-          className="group rounded-3xl bg-card border border-border p-6 shadow-soft hover:border-primary/40 hover:-translate-y-0.5 transition"
-        >
-          <div className="flex items-center gap-4">
-            <div className="h-14 w-14 rounded-2xl bg-accent/30 grid place-items-center shrink-0">
-              <Sparkles className="h-6 w-6 text-accent-foreground" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Smart review</div>
-              <div className="font-display text-xl font-bold mt-0.5">12 items ready</div>
-              <div className="text-xs text-muted-foreground mt-1">Lock in what you learned this week</div>
-            </div>
-            <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:translate-x-1 group-hover:text-primary transition" />
-          </div>
-        </Link>
-      </div>
-
-
-      {/* Daily Goal + Daily Missions */}
-      <section className="grid lg:grid-cols-[1fr_2fr] gap-4">
+      {/* Daily Goal + Daily Missions — main engagement */}
+      <section className="grid lg:grid-cols-[1fr_2fr] gap-4 animate-fade-in-up" style={{ animationDelay: "150ms" }}>
 
         {/* Daily goal ring */}
-        <div className="rounded-3xl bg-card border border-border p-5 shadow-soft">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-xs uppercase tracking-wider text-muted-foreground">Today's goal</div>
-              <div className="font-display text-lg font-bold mt-0.5 flex items-center gap-1.5">
-                <Target className="h-4 w-4 text-primary" /> Speak 15 minutes
+        <div className="rounded-3xl bg-card border border-border p-4 sm:p-5 shadow-soft">
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0">
+              <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Today's goal</div>
+              <div className="font-display text-base sm:text-lg font-bold mt-0.5 flex items-center gap-1.5">
+                <Target className="h-4 w-4 text-primary shrink-0" /> Speak 15 minutes
               </div>
             </div>
-            <span className="text-xs font-bold px-2 py-1 rounded-full bg-primary/10 text-primary">+100 XP</span>
+            <span className="text-[11px] font-bold px-2 py-1 rounded-full bg-primary/10 text-primary shrink-0">+100 XP</span>
           </div>
           <div className="mt-4 flex items-center gap-4">
             <DailyRing pct={dailyPct} />
-            <div className="text-sm">
+            <div className="text-sm min-w-0">
               <div className="font-bold text-lg">{dailyDone}/{dailyTotal}</div>
               <div className="text-xs text-muted-foreground">missions done</div>
               <p className="text-xs text-primary mt-2 font-medium">
@@ -160,12 +121,12 @@ function Dashboard() {
         </div>
 
         {/* Missions list */}
-        <div className="rounded-3xl bg-card border border-border p-5 shadow-soft">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-display text-lg font-bold flex items-center gap-2">
-              <Headphones className="h-4 w-4 text-primary" /> Daily missions
+        <div className="rounded-3xl bg-card border border-border p-4 sm:p-5 shadow-soft">
+          <div className="flex items-center justify-between mb-3 gap-2">
+            <h3 className="font-display text-base sm:text-lg font-bold flex items-center gap-2 min-w-0">
+              <Headphones className="h-4 w-4 text-primary shrink-0" /> Daily missions
             </h3>
-            <span className="text-[11px] text-muted-foreground">Resets in 8h</span>
+            <span className="text-[11px] text-muted-foreground shrink-0">Resets in 8h</span>
           </div>
           <div className="grid sm:grid-cols-2 gap-2.5">
             {dailyMissions.map((m, idx) => {
@@ -210,6 +171,45 @@ function Dashboard() {
           </div>
         </div>
       </section>
+
+      {/* Speaking-first quick actions */}
+      <div className="grid md:grid-cols-2 gap-4 animate-fade-in-up" style={{ animationDelay: "180ms" }}>
+        <Link
+          to="/conversations"
+          className="group relative overflow-hidden rounded-3xl bg-secondary text-secondary-foreground p-5 sm:p-6 shadow-card hover:-translate-y-0.5 transition"
+        >
+          <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-gradient-primary opacity-30 blur-2xl" />
+          <div className="relative flex items-center gap-4">
+            <div className="h-14 w-14 rounded-2xl bg-gradient-primary grid place-items-center shadow-glow shrink-0">
+              <Mic className="h-6 w-6 text-primary-foreground" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-[11px] uppercase tracking-wider opacity-70">Speak now</div>
+              <div className="font-display text-lg sm:text-xl font-bold mt-0.5">Practice a real conversation</div>
+              <div className="text-xs opacity-80 mt-1">AI tutor · 5–15 min · instant feedback</div>
+            </div>
+            <ArrowRight className="h-5 w-5 opacity-70 group-hover:translate-x-1 transition shrink-0" />
+          </div>
+        </Link>
+
+        <Link
+          to="/review"
+          className="group rounded-3xl bg-card border border-border p-5 sm:p-6 shadow-soft hover:border-primary/40 hover:-translate-y-0.5 transition"
+        >
+          <div className="flex items-center gap-4">
+            <div className="h-14 w-14 rounded-2xl bg-accent/30 grid place-items-center shrink-0">
+              <Sparkles className="h-6 w-6 text-accent-foreground" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Smart review</div>
+              <div className="font-display text-lg sm:text-xl font-bold mt-0.5">12 items ready</div>
+              <div className="text-xs text-muted-foreground mt-1">Lock in what you learned this week</div>
+            </div>
+            <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:translate-x-1 group-hover:text-primary transition shrink-0" />
+          </div>
+        </Link>
+      </div>
+
 
       {/* Level progress bar — slim, focused */}
       <div className="rounded-3xl bg-card border border-border p-5 shadow-soft">
