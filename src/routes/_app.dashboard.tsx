@@ -93,12 +93,6 @@ function Dashboard() {
         </div>
       </Link>
 
-      {/* Motivational microcopy strip */}
-      <div className="grid sm:grid-cols-3 gap-2.5 animate-fade-in-up" style={{ animationDelay: "150ms" }}>
-        <MotivationChip icon="🎯" text={`Only ${user.xpToNext - user.xp} XP to Level ${user.level + 1}`} tone="primary" />
-        <MotivationChip icon="🔥" text={`Keep your ${user.streak}-day streak alive`} tone="flame" />
-        <MotivationChip icon="📈" text="You're improving faster than last week" tone="accent" />
-      </div>
 
       {/* Speaking-first quick actions */}
       <div className="grid md:grid-cols-2 gap-4 animate-fade-in-up" style={{ animationDelay: "180ms" }}>
