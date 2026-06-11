@@ -212,7 +212,7 @@ function Dashboard() {
 
 
       {/* Level progress bar — slim, focused */}
-      <div className="rounded-3xl bg-card border border-border p-5 shadow-soft">
+      <div className="rounded-3xl bg-card border border-border p-4 sm:p-5 shadow-soft">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-gradient-primary grid place-items-center shadow-glow text-primary-foreground font-display font-bold">
