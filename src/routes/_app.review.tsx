@@ -231,8 +231,8 @@ function ReviewSession({ cards, onClose }: { cards: ReviewCard[]; onClose: () =>
     [results],
   );
   const correct = results.good + results.easy;
-  const accuracy = cards.length ? Math.round((correct / Math.max(1, index + (done ? 0 : 0))) * 100) : 0;
   const progressPct = ((done ? cards.length : index) / cards.length) * 100;
+
 
   const rate = (r: Rating) => {
     setResults((prev) => ({ ...prev, [r]: prev[r] + 1 }));
